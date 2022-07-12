@@ -6,7 +6,7 @@ Readme in progress...
 
 ## Contributions
 
-Contributions to [Project name] are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Contributions to 1time are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
@@ -15,6 +15,5 @@ Apache 2.0 licensed, see [LICENSE](LICENSE) file.
 
 <br/> 
 
-> Pick one of the following:
 
 [![With â¤ï¸ from Atlassian](https://raw.githubusercontent.com/atlassian-internal/oss-assets/master/banner-cheers.png)](https://www.atlassian.com)
