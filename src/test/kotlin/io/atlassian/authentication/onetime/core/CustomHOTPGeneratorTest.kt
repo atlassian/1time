@@ -1,5 +1,8 @@
-package io.atlassian.authentication.onetime
+package io.atlassian.authentication.onetime.io.atlassian.authentication.onetime.core
 
+import io.atlassian.authentication.onetime.arbHMACDigest
+import io.atlassian.authentication.onetime.arbOtpLength
+import io.atlassian.authentication.onetime.arbTotpSecret
 import io.atlassian.authentication.onetime.core.CustomHOTPGenerator
 import io.atlassian.authentication.onetime.core.HMACDigest
 import io.atlassian.authentication.onetime.core.OTPLength
@@ -7,15 +10,17 @@ import io.atlassian.authentication.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
-import io.kotest.matchers.ints.shouldBeLessThanOrEqual
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.*
+import io.kotest.property.PropertyTesting
+import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.long
 import io.kotest.property.checkAll
 import java.time.Clock
 
 class CustomHOTPGeneratorTest : FunSpec() {
     init {
+        PropertyTesting.defaultIterationCount = 1_000_000
         context("HOTP generation") {
             test("should be represented by strings of the specified length") {
                 checkAll(
@@ -25,10 +30,8 @@ class CustomHOTPGeneratorTest : FunSpec() {
                     Arb.long(0..Long.MAX_VALUE)
                 ) { otpLength, secret, digest, counter ->
                     given(TestState(otpLength = otpLength, digestSpecification = digest)) {
-                        hotpGenerator.generate(secret.decode(), counter).run {
+                        hotpGenerator.generate(secret.value, counter).run {
                             value.length shouldBe otpLength.value
-                            value.length shouldBeGreaterThanOrEqual OTPLength.SIX.value
-                            value.length shouldBeLessThanOrEqual OTPLength.TEN.value
                         }
                     }
                 }
@@ -42,17 +45,17 @@ class CustomHOTPGeneratorTest : FunSpec() {
                     Arb.long(0..Long.MAX_VALUE)
                 ) { otpLength, secret, digest, counter ->
                     given(TestState(otpLength = otpLength, digestSpecification = digest)) {
-                        hotpGenerator.generate(secret.decode(), counter).value.toInt() shouldBeGreaterThanOrEqual 0
+                        hotpGenerator.generate(secret.value, counter).value.toInt() shouldBeGreaterThanOrEqual 0
                     }
                 }
             }
 
             test("should generate HOTPs defined in RFC 4226 test cases") {
                 //See https://datatracker.ietf.org/doc/html/rfc4226#page-32
-                val key = TOTPSecret.fromString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
+                val key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
                 given(TestState(otpLength = OTPLength.SIX, digestSpecification = HMACDigest.SHA1)) {
                     val generatedOtps = (0L..9L).map { counter ->
-                        hotpGenerator.generate(key.decode(), counter).value
+                        hotpGenerator.generate(key.value, counter).value
                     }
                     generatedOtps shouldContainExactly listOf(
                         "755224",
@@ -71,12 +74,15 @@ class CustomHOTPGeneratorTest : FunSpec() {
 
             test("should generate HOTPs defined in RFC 6238 test cases") {
                 //See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
-
-                val sha1Key = TOTPSecret.fromString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
-                val sha256Key = TOTPSecret.fromString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ" +
-                 "GEZDGNBVGY3TQOJQGEZA")
-                val sha512Key = TOTPSecret.fromString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ" +
-                 "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA")
+                val sha1Key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
+                val sha256Key = TOTPSecret.fromBase32EncodedString(
+                    "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ" +
+                            "GEZDGNBVGY3TQOJQGEZA"
+                )
+                val sha512Key = TOTPSecret.fromBase32EncodedString(
+                    "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ" +
+                            "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA"
+                )
 
 
                 val expectedResults = mapOf(
@@ -101,8 +107,7 @@ class CustomHOTPGeneratorTest : FunSpec() {
                     sha512Key   to (666666666L  to (HMACDigest.SHA512   to "47863826")),
                 )
 
-                for( entry in expectedResults.entries){
-
+                for (entry in expectedResults.entries) {
                     val key = entry.key
                     val counter = entry.value.first
                     val digest = entry.value.second.first
@@ -111,11 +116,11 @@ class CustomHOTPGeneratorTest : FunSpec() {
                     CustomHOTPGenerator(
                         otpLength = OTPLength.EIGHT,
                         digest = digest,
-                    ).generate(key = key.decode(), counter).value shouldBe expectedOtp
+                    ).generate(key = key.value, counter).value shouldBe expectedOtp
                 }
             }
 
-            context("for all digests"){
+            context("for all digests") {
                 test("should generate OTPs for different key lengths") {
                     checkAll(
                         arbOtpLength,
@@ -123,19 +128,16 @@ class CustomHOTPGeneratorTest : FunSpec() {
                         Arb.int(20..64),
                         Arb.long(0..Long.MAX_VALUE)
                     ) { otpLength, digest, keyLength, counter ->
-
-                        val key = TOTPSecret.fromString("A".repeat(keyLength))
+                        val key = TOTPSecret.fromBase32EncodedString("A".repeat(keyLength))
                         CustomHOTPGenerator(
                             otpLength = otpLength,
                             digest = digest,
-                        ).generate(key = key.decode(), counter).value.length shouldBe otpLength.value
+                        ).generate(key = key.value, counter).value.length shouldBe otpLength.value
                     }
                 }
-
             }
         }
     }
-
 
     private suspend fun given(state: TestState = TestState(), test: suspend TestState.(CustomHOTPGenerator) -> Unit) {
         with(state) {
@@ -148,11 +150,9 @@ class CustomHOTPGeneratorTest : FunSpec() {
         val otpLength: OTPLength = OTPLength.SIX,
         val digestSpecification: HMACDigest = HMACDigest.SHA1
     ) {
-
         val hotpGenerator = CustomHOTPGenerator(
             otpLength = otpLength,
             digest = digestSpecification,
         )
     }
-
 }

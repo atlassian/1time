@@ -3,7 +3,7 @@ package io.atlassian.authentication.onetime.core
 import io.atlassian.authentication.onetime.model.TOTPSecret
 import java.time.Clock
 
-interface TOTPGenerator: HOTPGenerator{
+interface TOTPGenerator : HOTPGenerator {
 
     val startTime: Int
     val timeStepSeconds: Int
@@ -20,6 +20,8 @@ interface TOTPGenerator: HOTPGenerator{
     fun generate(totpSecret: TOTPSecret, delaySteps: Int = 0, futureSteps: Int = 0): List<TOTP>
 }
 
+data class TOTP(val value: String)
+
 /**
  * Custom implementation of HOTP generator specifically for time-based one time password.
  * This leverages HMAC generation and truncation done generically on HOTPGenerator and extend it
@@ -34,15 +36,9 @@ class CustomTOTPGenerator(
 ) : TOTPGenerator, CustomHOTPGenerator(otpLength, digest) {
 
     override fun generate(totpSecret: TOTPSecret, delaySteps: Int, futureSteps: Int): List<TOTP> {
-        val decodedTotpSecret: ByteArray = totpSecret.decode()
         val step: Long = ((clock.millis() / 1000) - startTime) / timeStepSeconds
         return ((step - delaySteps until step) + step + (step + 1..step + futureSteps))
-                .map {generate(decodedTotpSecret, it) }
-                .map { hotp -> TOTP(hotp.value) }
+            .map { generate(totpSecret.value, it) }
+            .map { hotp -> TOTP(hotp.value) }
     }
 }
-
-
-data class TOTP(val value: String)
-
-

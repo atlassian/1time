@@ -1,5 +1,8 @@
-package io.atlassian.authentication.onetime
+package io.atlassian.authentication.onetime.io.atlassian.authentication.onetime.core
 
+import io.atlassian.authentication.onetime.arbInstant
+import io.atlassian.authentication.onetime.arbOtpLength
+import io.atlassian.authentication.onetime.arbTotpSecret
 import io.atlassian.authentication.onetime.core.CustomTOTPGenerator
 import io.atlassian.authentication.onetime.core.HMACDigest
 import io.atlassian.authentication.onetime.core.OTPLength
@@ -10,6 +13,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.property.Arb
+import io.kotest.property.PropertyTesting
 import io.kotest.property.arbitrary.int
 import io.kotest.property.checkAll
 import java.time.Clock
@@ -17,8 +21,9 @@ import java.time.Instant
 import java.time.ZoneOffset
 
 class CustomTOTPGeneratorTest : FunSpec() {
-
     init {
+
+
         context("TOTP generation") {
             test("should always generate a non empty list of one element when no past or future steps are provided") {
                 checkAll(arbInstant, arbTotpSecret) { time, secret ->
@@ -66,10 +71,8 @@ class CustomTOTPGeneratorTest : FunSpec() {
             test("should be represented by strings of the specified length") {
                 checkAll(
                     arbOtpLength,
-                    arbTotpSecret,
-                    Arb.int(0..5),
-                    Arb.int(0..5)
-                ) { otpLength, secret, pastSteps, futureSteps ->
+                    arbTotpSecret
+                ) { otpLength, secret->
                     given(TestState(otpLength = otpLength)) {
                         totpGenerator.generate(secret).forEach {
                             it.value.length shouldBe otpLength.value
@@ -81,16 +84,14 @@ class CustomTOTPGeneratorTest : FunSpec() {
 
             test("should generate TOTPs defined in RFC 6238 test cases") {
                 //See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
-
-                val sha1Key = TOTPSecret.fromString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
-                val sha256Key = TOTPSecret.fromString(
+                val sha1Key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
+                val sha256Key = TOTPSecret.fromBase32EncodedString(
                         "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA"
                         )
-                val sha512Key = TOTPSecret.fromString(
+                val sha512Key = TOTPSecret.fromBase32EncodedString(
                         "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZ" +
                          "DGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA"
                         )
-
 
                 val expectedResults = mapOf(
                     // key      epoch time(s)       Digest                  Expected OTP
