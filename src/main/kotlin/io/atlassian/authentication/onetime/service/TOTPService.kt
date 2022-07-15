@@ -24,9 +24,17 @@ interface TOTPService {
 
     suspend fun verify(
         code: TOTP,
-        totpSecret: TOTPSecret
+        totpSecret: TOTPSecret,
+        allowedPastSteps: Int = 0,
+        allowedFutureSteps: Int = 0
     ): TOTPVerificationResult
 }
+
+data class TOTPConfiguration(
+  val secretProvider: SecretProvider = AsciiRangeSecretProvider(),
+  val allowedPastSteps: Int,
+  val allowedFutureSteps: Int
+)
 
 sealed class TOTPVerificationResult {
     object InvalidTotp : TOTPVerificationResult()
@@ -35,10 +43,10 @@ sealed class TOTPVerificationResult {
 
 class DefaultTOTPService(
     private val totpGenerator: TOTPGenerator = CustomTOTPGenerator(clock = Clock.systemUTC()),
-    private val secretProvider: SecretProvider = AsciiRangeSecretProvider()
+    private val totpConfiguration: TOTPConfiguration
 ) : TOTPService {
 
-    override suspend fun generateTotpSecret(): TOTPSecret = secretProvider.generateSecret()
+    override suspend fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
     override suspend fun generateTOTPUrl(
         totpSecret: TOTPSecret,
@@ -58,9 +66,11 @@ class DefaultTOTPService(
 
     override suspend fun verify(
         code: TOTP,
-        totpSecret: TOTPSecret
+        totpSecret: TOTPSecret,
+        allowedPastSteps: Int,
+        allowedFutureSteps: Int
     ): TOTPVerificationResult {
-        val index = totpGenerator.generate(totpSecret, 0, 0).indexOf(code)
+        val index = totpGenerator.generate(totpSecret, allowedPastSteps, allowedFutureSteps).indexOf(code)
         return if (index == -1) {
             TOTPVerificationResult.InvalidTotp
         } else {
@@ -68,3 +78,4 @@ class DefaultTOTPService(
         }
     }
 }
+

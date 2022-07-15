@@ -1,0 +1,46 @@
+# https://github.com/JetBrains/kotlin-playground/blob/master/.editorconfig
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
+root = true
+
+
+[*]
+
+# Change these settings to your own preference
+indent_style = space
+indent_size = 4
+
+# We recommend you to keep these unchanged
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# To override IDEA default 120 columns
+max_line_length = 160
+ij_visual_guides = 140, 160
+
+[*.md]
+trim_trailing_whitespace = false
+
+
+[*.{kt, java}]
+ij_kotlin_imports_layout = *
+indent_size = 2
+ij_kotlin_name_count_to_use_star_import = 999
+ij_kotlin_name_count_to_use_star_import_for_members = 999
+ij_java_class_count_to_use_import_on_demand = 999
+disabled_rules = no-unit-return
+
+[*.kts]
+ij_kotlin_imports_layout = *
+indent_size = 2
+ij_kotlin_name_count_to_use_star_import = 999
+ij_kotlin_name_count_to_use_star_import_for_members = 999
+ij_java_class_count_to_use_import_on_demand = 999
+disabled_rules = no-unit-return
+
+[*.{tf, yml, yaml}]
+indent_size = 2
