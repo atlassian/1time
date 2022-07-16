@@ -91,25 +91,27 @@ class CustomTOTPGeneratorTest : FunSpec() {
         )
 
         val expectedResults = mapOf(
+          // @formatter:off
           // key      epoch time(s)       Digest                  Expected OTP
-          sha1Key to (59L to (HMACDigest.SHA1 to "94287082")),
-          sha256Key to (59L to (HMACDigest.SHA256 to "46119246")),
-          sha512Key to (59L to (HMACDigest.SHA512 to "90693936")),
-          sha1Key to (1111111109L to (HMACDigest.SHA1 to "07081804")),
-          sha256Key to (1111111109L to (HMACDigest.SHA256 to "68084774")),
-          sha512Key to (1111111109L to (HMACDigest.SHA512 to "25091201")),
-          sha1Key to (1111111111L to (HMACDigest.SHA1 to "14050471")),
-          sha256Key to (1111111111L to (HMACDigest.SHA256 to "67062674")),
-          sha512Key to (1111111111L to (HMACDigest.SHA512 to "99943326")),
-          sha1Key to (1234567890L to (HMACDigest.SHA1 to "89005924")),
-          sha256Key to (1234567890L to (HMACDigest.SHA256 to "91819424")),
-          sha512Key to (1234567890L to (HMACDigest.SHA512 to "93441116")),
-          sha1Key to (2000000000L to (HMACDigest.SHA1 to "69279037")),
-          sha256Key to (2000000000L to (HMACDigest.SHA256 to "90698825")),
-          sha256Key to (2000000000L to (HMACDigest.SHA512 to "38618901")),
-          sha1Key to (20000000000L to (HMACDigest.SHA1 to "65353130")),
-          sha256Key to (20000000000L to (HMACDigest.SHA256 to "77737706")),
-          sha512Key to (20000000000L to (HMACDigest.SHA512 to "47863826")),
+          sha1Key     to (59L             to (HMACDigest.SHA1     to "94287082")),
+          sha256Key   to (59L             to (HMACDigest.SHA256   to "46119246")),
+          sha512Key   to (59L             to (HMACDigest.SHA512   to "90693936")),
+          sha1Key     to (1111111109L     to (HMACDigest.SHA1     to "07081804")),
+          sha256Key   to (1111111109L     to (HMACDigest.SHA256   to "68084774")),
+          sha512Key   to (1111111109L     to (HMACDigest.SHA512   to "25091201")),
+          sha1Key     to (1111111111L     to (HMACDigest.SHA1     to "14050471")),
+          sha256Key   to (1111111111L     to (HMACDigest.SHA256   to "67062674")),
+          sha512Key   to (1111111111L     to (HMACDigest.SHA512   to "99943326")),
+          sha1Key     to (1234567890L     to (HMACDigest.SHA1     to "89005924")),
+          sha256Key   to (1234567890L     to (HMACDigest.SHA256   to "91819424")),
+          sha512Key   to (1234567890L     to (HMACDigest.SHA512   to "93441116")),
+          sha1Key     to (2000000000L     to (HMACDigest.SHA1     to "69279037")),
+          sha256Key   to (2000000000L     to (HMACDigest.SHA256   to "90698825")),
+          sha256Key   to (2000000000L     to (HMACDigest.SHA512   to "38618901")),
+          sha1Key     to (20000000000L    to (HMACDigest.SHA1     to "65353130")),
+          sha256Key   to (20000000000L    to (HMACDigest.SHA256   to "77737706")),
+          sha512Key   to (20000000000L    to (HMACDigest.SHA512   to "47863826")),
+          // @formatter:on
         )
 
         for (entry in expectedResults.entries) {

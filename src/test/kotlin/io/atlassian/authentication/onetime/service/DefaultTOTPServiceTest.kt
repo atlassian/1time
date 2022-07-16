@@ -11,13 +11,13 @@ import io.atlassian.authentication.onetime.core.CustomTOTPGenerator
 import io.atlassian.authentication.onetime.core.HMACDigest
 import io.atlassian.authentication.onetime.core.OTPLength
 import io.atlassian.authentication.onetime.core.TOTP
-import io.atlassian.authentication.onetime.model.Issuer
 import io.atlassian.authentication.onetime.model.TOTPSecret
 import io.atlassian.authentication.onetime.service.DefaultTOTPService
 import io.atlassian.authentication.onetime.service.TOTPConfiguration
 import io.atlassian.authentication.onetime.service.TOTPVerificationResult
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
+import io.kotest.matchers.ints.shouldBeInRange
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.beInstanceOf
@@ -25,6 +25,8 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.int
 import io.kotest.property.arbitrary.long
 import io.kotest.property.checkAll
+import io.mockk.coEvery
+import io.mockk.mockk
 import java.net.URI
 import java.time.Clock
 import java.time.Instant
@@ -32,10 +34,19 @@ import java.time.ZoneOffset
 
 class DefaultTOTPServiceTest : FunSpec({
 
-  test("generateTotpSecret") { }
+  context("Generate TOTP secret") {
+    test("should round trip"){
+      checkAll(arbTotpSecret){ secret ->
+        val encoded = secret.base32Encoded
+        val fromEncoded = TOTPSecret.fromBase32EncodedString(encoded)
+        fromEncoded shouldBe secret
+        fromEncoded.base32Encoded shouldBe encoded
+      }
+    }
+  }
 
   context("Generate TOTP URI") {
-    test("should generate URI correctly when issuer is present") {
+    test("should generate URI correctly") {
       checkAll(
         arbTotpSecret,
         arbEmailAddress,
@@ -114,6 +125,9 @@ class DefaultTOTPServiceTest : FunSpec({
               allowedPastSteps = allowedPastSteps
             )
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
+            (verificationResult as TOTPVerificationResult.Success).run {
+              this.index shouldBeInRange (-allowedPastSteps..0)
+            }
           }
         }
       }
@@ -162,6 +176,9 @@ class DefaultTOTPServiceTest : FunSpec({
               allowedFutureSteps = allowedFutureSteps
             )
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
+            (verificationResult as TOTPVerificationResult.Success).run {
+              this.index shouldBeInRange (0..allowedFutureSteps)
+            }
           }
         }
       }
@@ -169,16 +186,13 @@ class DefaultTOTPServiceTest : FunSpec({
 
     /**
      * In this test we position the server clock at the very beginning of the time step. This is the lower bound.
-     * We then calculate the end of the time step further in the future that is allowed. This is the upper bound.
+     * We then calculate the end of the time step. This is the upper bound.
      * We then calculate a random delay in the range of the lowest bound to upper bound inclusive.
      *
      * Example:
-     *                    _____<- upper bound
-     *                     T+1
-     * lower bound->______
+
+     * lower bound->______<- upper bound
      *                T
-     *         _____
-     *          T-1
      */
     test("should validate TOTP within same time step ") {
       checkAll(
@@ -186,31 +200,45 @@ class DefaultTOTPServiceTest : FunSpec({
         arbOtpLength,
         arbTotpSecret,
         Arb.int(30..90), // time step
-        Arb.int(0..3)    // future steps
-      ) { time, otpLength, secret, timeStep, allowedFutureSteps ->
+      ) { time, otpLength, secret, timeStep ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
         val serverTimeInSeconds = (serverTimeStep * timeStep)
-        val clientClockUpperBound = serverTimeInSeconds + ((timeStep * (allowedFutureSteps + 1)) - 1)
+        val clientClockUpperBound = serverTimeInSeconds + timeStep - 1
 
         checkAll(Arb.long(serverTimeInSeconds..clientClockUpperBound)) { clientTime ->
           given(
             TestState(
               clock = Clock.fixed(Instant.ofEpochSecond(serverTimeInSeconds), ZoneOffset.UTC),
               timeStep = timeStep,
-              otpLength = otpLength,
-              allowedFutureTimeSteps = allowedFutureSteps
+              otpLength = otpLength
             )
           ) {
             val driftedClock = Clock.fixed(Instant.ofEpochSecond(clientTime), ZoneOffset.UTC)
             val userInputTotp = localTOTPGeneration(secret, driftedClock, otpLength, timeStep)
             val verificationResult = defaultTOTPService.verify(
               userInputTotp,
-              secret,
-              allowedFutureSteps = allowedFutureSteps
+              secret
             )
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
+            (verificationResult as TOTPVerificationResult.Success).run {
+              this.index shouldBe 0
+            }
           }
+        }
+      }
+    }
+
+    test("should reject invalid TOTP") {
+      checkAll(
+        arbTotpSecret,
+      ) { secret ->
+        given(TestStateMockedTOTP()) {
+          val verificationResult = defaultTOTPService.verify(
+            TOTP("123456"),
+            secret
+          )
+          verificationResult should beInstanceOf<TOTPVerificationResult.InvalidTotp>()
         }
       }
     }
@@ -223,14 +251,13 @@ private suspend fun given(state: TestState = TestState(), test: suspend TestStat
   }
 }
 
-data class TestState(
+open class TestState(
   val clock: Clock = Clock.systemUTC(),
   val timeStep: Int = 30,
   val otpLength: OTPLength = OTPLength.SIX,
   val digest: HMACDigest = HMACDigest.SHA1,
   val allowedPastTimeSteps: Int = 0,
   val allowedFutureTimeSteps: Int = 0,
-  val issuer: Issuer = Issuer("Atlassian"),
 ) {
 
   private val totpGenerator = CustomTOTPGenerator(
@@ -241,7 +268,31 @@ data class TestState(
     clock = clock
   )
 
-  val defaultTOTPService = DefaultTOTPService(
+  open val defaultTOTPService = DefaultTOTPService(
+    totpGenerator,
+    TOTPConfiguration(
+      allowedPastSteps = allowedPastTimeSteps,
+      allowedFutureSteps = allowedFutureTimeSteps
+    )
+  )
+}
+
+class TestStateMockedTOTP(
+  private val totpGeneratorResponse: List<TOTP> = listOf(TOTP("654321"))
+) : TestState(
+  timeStep = 30,
+  clock = Clock.systemUTC(),
+  otpLength = OTPLength.SIX,
+  digest = HMACDigest.SHA1,
+  allowedPastTimeSteps = 0,
+  allowedFutureTimeSteps = 0,
+) {
+
+  private val totpGenerator = mockk<CustomTOTPGenerator>(relaxed = true) {
+    coEvery { generate(any(), any(), any()) } coAnswers { totpGeneratorResponse }
+  }
+
+  override val defaultTOTPService = DefaultTOTPService(
     totpGenerator,
     TOTPConfiguration(
       allowedPastSteps = allowedPastTimeSteps,

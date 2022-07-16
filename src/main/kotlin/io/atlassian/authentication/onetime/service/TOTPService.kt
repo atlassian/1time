@@ -74,7 +74,7 @@ class DefaultTOTPService(
         return if (index == -1) {
             TOTPVerificationResult.InvalidTotp
         } else {
-            TOTPVerificationResult.Success(index)
+            TOTPVerificationResult.Success(index - allowedPastSteps)
         }
     }
 }

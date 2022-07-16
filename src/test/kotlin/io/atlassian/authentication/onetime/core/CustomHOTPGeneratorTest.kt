@@ -20,7 +20,6 @@ import java.time.Clock
 
 class CustomHOTPGeneratorTest : FunSpec() {
     init {
-        PropertyTesting.defaultIterationCount = 1_000_000
         context("HOTP generation") {
             test("should be represented by strings of the specified length") {
                 checkAll(
