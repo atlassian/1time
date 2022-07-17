@@ -33,7 +33,59 @@ As described in RFC-6238, the verifier is the system validating the user's crede
 
 But before being able to verify a user's TOTP, we need to enrol the user.
 
+Upon an enrolment request, the system will
+- Generate a secret and store it for the user and other information the system deems necessary.
+- Generate a TOTP URI for further QR code generation that will allow the user to enrol with mobile apps such as Google Authenticator
+
+This library generates secrets and TOTP URIs.
+
+#### Generating a secret
+
+```kotlin
+val service = DefaultTOTPService()
+val secret = service.generateTotpSecret()
+secret.base32Encoded //NIQXUILREVGHIUKNORKHSJDHKMWS6UTY
+```
+#### Generating a TOTP URI
+
+```kotlin
+
+val totpUri = service.generateTOTPUrl(
+    secret, ////NIQXUILREVGHIUKNORKHSJDHKMWS6UTY
+    EmailAddress("jsmith@acme.com"),
+    Issuer("Acme Co")
+)
+totpUri // otpauth://totp/Acme+Co:jsmith%40acme.com?secret=NIQXUILREVGHIUKNORKHSJDHKMWS6UTY&issuer=Acme+Co&algorithm=SHA1&digits=6&period=30
+```
+
+Once generated the totpUrl, the system can use any library of choice to generate the TOTP QR code. For example:
+
+<img height="150" src="docs/img/totp-qr.png" title="TOTP QR code" width="150"/>
+
+
+#### Verifying enrolled user
+
+After the user has successfully enrolled, both the user and the system will share the secret.
+
+When the user (prover) is trying to authenticate, the system (verifier) will validate the user's TOTP input.
+
+In order to do so, do:
+
+```kotlin
+val userInput: TOTP = TOTP("123456") //TOTP from user input
+val result = service.verify(
+  userInput, 
+  secret //NIQXUILREVGHIUKNORKHSJDHKMWS6UTY
+)
+```
+
+The obtained `result` can be either
+- `TOTPVerificationResult.InvalidOtp`: The provided TOTP is invalid for the secret and default configuration
+- `TOTPVerificationResult.Success`: The provided TOTP is valid for the secret and default configuration. In addition, the index of the matching TOTP is provided in the `Success` data class.
+
+
 ### Tuning configuration
+WIP
 
 ## Contributions
 

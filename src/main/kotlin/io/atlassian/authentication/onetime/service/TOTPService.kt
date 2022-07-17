@@ -12,15 +12,15 @@ import java.time.Clock
 
 interface TOTPService {
 
-  suspend fun generateTotpSecret(): TOTPSecret
+  fun generateTotpSecret(): TOTPSecret
 
-  suspend fun generateTOTPUrl(
+  fun generateTOTPUrl(
     totpSecret: TOTPSecret,
     emailAddress: EmailAddress,
     issuer: Issuer
   ): URI
 
-  suspend fun verify(
+  fun verify(
     code: TOTP,
     totpSecret: TOTPSecret
   ): TOTPVerificationResult
@@ -28,8 +28,8 @@ interface TOTPService {
 
 data class TOTPConfiguration(
   val secretProvider: SecretProvider = AsciiRangeSecretProvider(),
-  val allowedPastSteps: Int,
-  val allowedFutureSteps: Int
+  val allowedPastSteps: Int = 0,
+  val allowedFutureSteps: Int = 0
 )
 
 sealed class TOTPVerificationResult {
@@ -39,12 +39,12 @@ sealed class TOTPVerificationResult {
 
 class DefaultTOTPService(
   private val totpGenerator: TOTPGenerator = TOTPGenerator(clock = Clock.systemUTC()),
-  private val totpConfiguration: TOTPConfiguration
+  private val totpConfiguration: TOTPConfiguration = TOTPConfiguration()
 ) : TOTPService {
 
-  override suspend fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
+  override fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
-  override suspend fun generateTOTPUrl(
+  override fun generateTOTPUrl(
     totpSecret: TOTPSecret,
     emailAddress: EmailAddress,
     issuer: Issuer
@@ -60,7 +60,7 @@ class DefaultTOTPService(
     return URI(template)
   }
 
-  override suspend fun verify(
+  override fun verify(
     code: TOTP,
     totpSecret: TOTPSecret
   ): TOTPVerificationResult {
