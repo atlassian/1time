@@ -3,13 +3,12 @@ package io.atlassian.authentication.onetime.io.atlassian.authentication.onetime.
 import io.atlassian.authentication.onetime.arbInstant
 import io.atlassian.authentication.onetime.arbOtpLength
 import io.atlassian.authentication.onetime.arbTotpSecret
-import io.atlassian.authentication.onetime.core.CustomTOTPGenerator
+import io.atlassian.authentication.onetime.core.TOTPGenerator
 import io.atlassian.authentication.onetime.core.HMACDigest
 import io.atlassian.authentication.onetime.core.OTPLength
 import io.atlassian.authentication.onetime.core.TOTP
 import io.atlassian.authentication.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.property.Arb
@@ -19,7 +18,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
 
-class CustomTOTPGeneratorTest : FunSpec() {
+class TOTPGeneratorTest : FunSpec() {
   init {
     context("TOTP generation") {
       test("should always generate a non empty list of one element when no past or future steps are provided") {
@@ -71,10 +70,9 @@ class CustomTOTPGeneratorTest : FunSpec() {
           arbTotpSecret
         ) { otpLength, secret ->
           given(TestState(otpLength = otpLength)) {
-            totpGenerator.generate(secret).forEach {
-              it.value.length shouldBe otpLength.value
-              it.value shouldMatch """\d{${otpLength.value}}""".toRegex()
-            }
+            val totp = totpGenerator.generateCurrent(secret)
+            totp.value.length shouldBe otpLength.value
+            totp.value shouldMatch """\d{${otpLength.value}}""".toRegex()
           }
         }
       }
@@ -115,25 +113,24 @@ class CustomTOTPGeneratorTest : FunSpec() {
         )
 
         for (entry in expectedResults.entries) {
-
           val key = entry.key
           val time = Clock.fixed(Instant.ofEpochSecond(entry.value.first), ZoneOffset.UTC)
           val digest = entry.value.second.first
           val expectedOtp = entry.value.second.second
 
-          CustomTOTPGenerator(
+          TOTPGenerator(
             otpLength = OTPLength.EIGHT,
             digest = digest,
             startTime = 0,
             clock = time,
             timeStepSeconds = 30
-          ).generate(key) shouldContain TOTP(expectedOtp)
+          ).generateCurrent(key) shouldBe TOTP(expectedOtp)
         }
       }
     }
   }
 
-  private suspend fun given(state: TestState = TestState(), test: suspend TestState.(CustomTOTPGenerator) -> Unit) {
+  private suspend fun given(state: TestState = TestState(), test: suspend TestState.(TOTPGenerator) -> Unit) {
     with(state) {
       test(state.totpGenerator)
     }
@@ -146,7 +143,7 @@ class CustomTOTPGeneratorTest : FunSpec() {
     val digestSpecification: HMACDigest = HMACDigest.SHA1
   ) {
 
-    val totpGenerator = CustomTOTPGenerator(
+    val totpGenerator = TOTPGenerator(
       startTime = 0,
       timeStepSeconds = timeStep,
       otpLength = otpLength,

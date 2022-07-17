@@ -6,8 +6,8 @@ import io.atlassian.authentication.onetime.arbInstant
 import io.atlassian.authentication.onetime.arbIssuer
 import io.atlassian.authentication.onetime.arbOtpLength
 import io.atlassian.authentication.onetime.arbTotpSecret
-import io.atlassian.authentication.onetime.core.CustomHOTPGenerator
-import io.atlassian.authentication.onetime.core.CustomTOTPGenerator
+import io.atlassian.authentication.onetime.core.HOTPGenerator
+import io.atlassian.authentication.onetime.core.TOTPGenerator
 import io.atlassian.authentication.onetime.core.HMACDigest
 import io.atlassian.authentication.onetime.core.OTPLength
 import io.atlassian.authentication.onetime.core.TOTP
@@ -121,8 +121,7 @@ class DefaultTOTPServiceTest : FunSpec({
             val userInputTotp = localTOTPGeneration(secret, delayedClock, otpLength, timeStep)
             val verificationResult = defaultTOTPService.verify(
               userInputTotp,
-              secret,
-              allowedPastSteps = allowedPastSteps
+              secret
             )
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
             (verificationResult as TOTPVerificationResult.Success).run {
@@ -172,8 +171,7 @@ class DefaultTOTPServiceTest : FunSpec({
             val userInputTotp = localTOTPGeneration(secret, driftedClock, otpLength, timeStep)
             val verificationResult = defaultTOTPService.verify(
               userInputTotp,
-              secret,
-              allowedFutureSteps = allowedFutureSteps
+              secret
             )
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
             (verificationResult as TOTPVerificationResult.Success).run {
@@ -260,7 +258,7 @@ open class TestState(
   val allowedFutureTimeSteps: Int = 0,
 ) {
 
-  private val totpGenerator = CustomTOTPGenerator(
+  private val totpGenerator = TOTPGenerator(
     startTime = 0,
     timeStepSeconds = timeStep,
     otpLength = otpLength,
@@ -288,7 +286,7 @@ class TestStateMockedTOTP(
   allowedFutureTimeSteps = 0,
 ) {
 
-  private val totpGenerator = mockk<CustomTOTPGenerator>(relaxed = true) {
+  private val totpGenerator = mockk<TOTPGenerator>(relaxed = true) {
     coEvery { generate(any(), any(), any()) } coAnswers { totpGeneratorResponse }
   }
 
@@ -312,7 +310,7 @@ private fun localTOTPGeneration(
   otpLength: OTPLength = OTPLength.SIX,
   timeStep: Int = 30
 ): TOTP {
-  val generator = CustomHOTPGenerator(otpLength, HMACDigest.SHA1)
+  val generator = HOTPGenerator(otpLength, HMACDigest.SHA1)
   val t: Long = obtainCurrentTimeStep(clock, timeStep)
   val hotp = generator.generate(totpSecret.value, t)
   return TOTP(hotp.value)
