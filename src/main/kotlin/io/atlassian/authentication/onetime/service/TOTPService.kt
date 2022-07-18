@@ -38,7 +38,7 @@ sealed class TOTPVerificationResult {
 }
 
 class DefaultTOTPService(
-  private val totpGenerator: TOTPGenerator = TOTPGenerator(clock = Clock.systemUTC()),
+  private val totpGenerator: TOTPGenerator = TOTPGenerator(),
   private val totpConfiguration: TOTPConfiguration = TOTPConfiguration()
 ) : TOTPService {
 
