@@ -129,6 +129,14 @@ val service = DefaultTOTPService(
   - `allowedPastSteps`: By default, this is 0. As specified by [RFC-6238](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2), the verifier should accept the TOTP from the previous time step to cater for possible network delays. If you want to accept past windows as valid, increase this number. 
   - `allowedFutureSteps`: By default, this is 0. Same as `allowedPastSteps` but to cater for possible clock drifts in which the prover's clock is slightly in the future relative to the verifier's. If you want to accept future time windows as valid, increase this number. More on time windows on the next section.
 
+## Secret providers
+
+We include two secret providers
+
+- `AsciiRangeSecretProvider`: Will generate 20 random bytes in the ASCII range. This enables de raw value to be printable and easier for transport / debugging.
+- `RandomSecretProvider`: Will generate 20 random bytes in the entire byte range. 
+
+If you want to use better random generators such as AWS KMS, you can implement your own `SecretProvider` and use such provider in the `totpConfiguration` of the `DefaultTOTPService`.
 
 ## Prover clock delays and verifier allowed windows
 
@@ -136,7 +144,7 @@ When both the prover's and verifier's clocks are in sync, this is what it would 
 
 ![img.png](docs/img/clocks-synced.png)
 
-The current TOTP for the prover is what the server sees on the middle of the window, since it now accepts TOTPs from 3 time windows; current window, the previous and the next.
+The current TOTP for the prover is what the server sees in the middle of the window, since it now accepts TOTPs from 3 time windows; current window, the previous and the next.
 
 But when the prover's clock is delayed relative to the verifiers, this is what it would look like:
 
