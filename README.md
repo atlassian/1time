@@ -127,7 +127,7 @@ val service = DefaultTOTPService(
 - `totpConfiguration`: This configuration allows to tune how the verification behaves in terms of accepted windows and how to generate secret keys.
   - `secretProvider`: By default we provide `AsciiRangeSecretProvider`. This is a random key generator that generates 20 bytes in the ASCII range. This is useful for when you need the raw secret value to be composed of printable characters. You can provide your own Secret provider by extending `SecretProvider` functional interface.
   - `allowedPastSteps`: By default, this is 0. As specified by [RFC-6238](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2), the verifier should accept the TOTP from the previous time step to cater for possible network delays. If you want to accept past windows as valid, increase this number. 
-  - `allowedFutureSteps`: By default, this is 0. Same as `allowedPastSteps` but to cater for possible clock drifts in which the prover's clock is slightly in the future relative to the verifier's. If you want to accept future time windows as valid, increase this number. More on time windows on the next section.
+  - `allowedFutureSteps`: By default, this is 0. Same as `allowedPastSteps` but to cater for possible clock drifts in which the prover's clock is slightly in the future relative to the verifier's. If you want to accept future time windows as valid, increase this number. More on time windows on the [next section](#prover-clock-delays-and-verifier-allowed-windows).
 
 ## Secret providers
 
