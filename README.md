@@ -1,7 +1,7 @@
 # 1time
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
-Lightweight implementation of RFC-6238 and RFC-4226 to generate and validate time-based one-time passwords (TOTP).
+Java/Kotlin lightweight implementation of RFC-6238 and RFC-4226 to generate and validate time-based one-time passwords (TOTP).
 
 ## Quick start
 
@@ -133,7 +133,7 @@ val service = DefaultTOTPService(
 
 We include two secret providers
 
-- `AsciiRangeSecretProvider`: Will generate 20 random bytes in the ASCII range. This enables de raw value to be printable and easier for transport / debugging.
+- `AsciiRangeSecretProvider`: Will generate 20 random bytes in the ASCII range. This enables the raw value to be printable and easier for transport / debugging.
 - `RandomSecretProvider`: Will generate 20 random bytes in the entire byte range. 
 
 If you want to use better random generators such as AWS KMS, you can implement your own `SecretProvider` and use such provider in the `totpConfiguration` of the `DefaultTOTPService`.
