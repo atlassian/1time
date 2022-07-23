@@ -3,6 +3,7 @@
 plugins {
   kotlin("jvm") version "1.6.21"
   application
+  `maven-publish`
 }
 
 repositories {
@@ -22,7 +23,7 @@ dependencies {
 }
 
 group = "io.atlassian.authentication"
-version = "1.0-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 description = "1time"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
@@ -31,7 +32,19 @@ tasks.test {
   useJUnitPlatform()
 }
 
-
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/atlassian-labs/1time")
+      credentials {
+        username = System.getenv("GITHUB_ACTOR")
+        password = System.getenv("GITHUB_TOKEN")
+      }
+    }
+  }
 }
