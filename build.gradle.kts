@@ -37,6 +37,13 @@ tasks.withType<JavaCompile>() {
 }
 
 publishing {
+
+  publications {
+    create<MavenPublication>("default") {
+      from(components["java"])
+    }
+  }
+
   repositories {
     maven {
       name = "GitHubPackages"
