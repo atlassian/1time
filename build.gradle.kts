@@ -23,7 +23,7 @@ dependencies {
 }
 
 group = "io.atlassian.authentication"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 description = "1time"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
