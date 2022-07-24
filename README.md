@@ -98,8 +98,10 @@ The index value indicates the window on which the TOTP was found. More on window
 
 When the verifier allows, for instance, 1 past window, one present window (mandatory) and one future window, upon successful verification, the index value will be:
 - -1 when successful on past window or T - 1
-- 0 when successful on current window
-- 1 when successful on future window
+- 0 when successful on current window or T
+- 1 when successful on future window or T + 1
+
+Where T is the time step. This is calculated by current epoch time in seconds divided by (floor) time step size (30 seconds by default). 
 
 This index is useful if your solution wants to implement [resynchronization](https://datatracker.ietf.org/doc/html/rfc6238#section-6).
 
@@ -111,7 +113,9 @@ after this step, the validator can validate the OTP with the current
 timestamp adjusted with the recorded number of time-step clock drifts
 for the token.
 
-By keeping track of the successful indexes per user device, the verifier could adjust the allowed windows to cater for prover's clock drifts. 
+By keeping track of the successful indexes per user device, the verifier could:
+- Adjust the allowed windows to cater for prover's clock drifts. 
+- Notify the user that the device's clock is drifting and could end up in blocking access to the account, asking the user to re-enrol.
 
 ### Tuning configuration
 
