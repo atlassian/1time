@@ -3,6 +3,10 @@
 
 Java/Kotlin lightweight implementation of RFC-6238 and RFC-4226 to generate and validate time-based one-time passwords (TOTP).
 
+## Maven / gradle dependency
+
+Check the latest release at [https://github.com/atlassian-labs/1time/releases/latest](https://github.com/atlassian-labs/1time/releases/latest)
+
 ## Quick start
 
 This library is suitable for both prover and verifier. 
@@ -82,6 +86,32 @@ The obtained `result` can be either
 - `TOTPVerificationResult.InvalidOtp`: The provided TOTP is invalid for the secret and default configuration
 - `TOTPVerificationResult.Success`: The provided TOTP is valid for the secret and default configuration. In addition, the index of the matching TOTP is provided in the `Success` data class.
 
+#### Success - index of matching TOTP
+
+When the verification is successful, the type of `result` will be `TOTPVerificationResult.Success`. This data class contains an index value:
+
+```kotlin
+data class Success(val index: Int) : TOTPVerificationResult()
+```
+
+The index value indicates the window on which the TOTP was found. More on windows [here](#prover-clock-delays-and-verifier-allowed-windows).
+
+When the verifier allows, for instance, 1 past window, one present window (mandatory) and one future window, upon successful verification, the index value will be:
+- -1 when successful on past window or T - 1
+- 0 when successful on current window
+- 1 when successful on future window
+
+This index is useful if your solution wants to implement [resynchronization](https://datatracker.ietf.org/doc/html/rfc6238#section-6).
+
+From RFC-6238:
+> Upon successful validation, the
+validation server can record the detected clock drift for the token
+in terms of the number of time steps.  When a new OTP is received
+after this step, the validator can validate the OTP with the current
+timestamp adjusted with the recorded number of time-step clock drifts
+for the token.
+
+By keeping track of the successful indexes per user device, the verifier could adjust the allowed windows to cater for prover's clock drifts. 
 
 ### Tuning configuration
 
