@@ -1,7 +1,7 @@
 
 @Suppress("DSL_SCOPE_VIOLATION") // intellij bug https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
-  kotlin("jvm") version "1.6.21"
+  kotlin("jvm") version "1.7.10"
   application
   `maven-publish`
 }
