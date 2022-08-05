@@ -19,7 +19,7 @@ java {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10")
     implementation("commons-codec:commons-codec:1.15")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.12.4")
