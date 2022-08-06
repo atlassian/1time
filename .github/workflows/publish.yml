@@ -1,0 +1,41 @@
+name: Publish to artifactory on release branch
+
+on:
+  push:
+    branches: [ "release" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+
+      - name: "Checkout sources"
+        uses: actions/checkout@v3
+
+      - name: "Setup Java"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: "Build"
+        run: chmod 755 gradlew && ./gradlew build
+
+        # Populates ARTIFACTORY_USERNAME and ARTIFACTORY_API_KEY with
+        # temporary username/password for publishing to packages.atlassian.com
+      - name: Get publish token
+        id: publish-token
+        uses: atlassian-labs/artifact-publish-token@v1.0.1
+        with:
+          output-modes: environment
+
+      # Publishes to Artifactory only on push to the "release" branch.
+      - name: "Publish"
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: chmod 755 gradlew && ./gradlew artifactoryPublish
