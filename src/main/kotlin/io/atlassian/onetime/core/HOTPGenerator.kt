@@ -1,4 +1,4 @@
-package io.atlassian.authentication.onetime.core
+package io.atlassian.onetime.core
 
 import java.nio.ByteBuffer
 import kotlin.experimental.and

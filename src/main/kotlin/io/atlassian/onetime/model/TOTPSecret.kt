@@ -1,4 +1,4 @@
-package io.atlassian.authentication.onetime.model
+package io.atlassian.onetime.model
 
 import org.apache.commons.codec.binary.Base32
 

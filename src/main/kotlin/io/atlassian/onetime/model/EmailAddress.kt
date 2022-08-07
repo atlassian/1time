@@ -1,4 +1,4 @@
-package io.atlassian.authentication.onetime.model
+package io.atlassian.onetime.model
 
 
 data class EmailDomain(val value: String)

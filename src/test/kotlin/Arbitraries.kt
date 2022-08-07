@@ -1,11 +1,11 @@
 package io.atlassian.authentication.onetime
 
-import io.atlassian.authentication.onetime.core.HMACDigest
-import io.atlassian.authentication.onetime.core.OTPLength
-import io.atlassian.authentication.onetime.model.EmailAddress
-import io.atlassian.authentication.onetime.model.EmailDomain
-import io.atlassian.authentication.onetime.model.Issuer
-import io.atlassian.authentication.onetime.model.TOTPSecret
+import io.atlassian.onetime.core.HMACDigest
+import io.atlassian.onetime.core.OTPLength
+import io.atlassian.onetime.model.EmailAddress
+import io.atlassian.onetime.model.EmailDomain
+import io.atlassian.onetime.model.Issuer
+import io.atlassian.onetime.model.TOTPSecret
 import io.kotest.property.Arb
 import io.kotest.property.Exhaustive
 import io.kotest.property.Gen

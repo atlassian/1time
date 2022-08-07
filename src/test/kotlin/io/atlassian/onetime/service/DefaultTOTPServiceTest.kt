@@ -1,4 +1,4 @@
-package io.atlassian.authentication.onetime.io.atlassian.authentication.onetime.service
+package io.atlassian.authentication.onetime.io.atlassian.onetime.service
 
 import io.atlassian.authentication.onetime.arbEmailAddress
 import io.atlassian.authentication.onetime.arbHMACDigest
@@ -6,15 +6,15 @@ import io.atlassian.authentication.onetime.arbInstant
 import io.atlassian.authentication.onetime.arbIssuer
 import io.atlassian.authentication.onetime.arbOtpLength
 import io.atlassian.authentication.onetime.arbTotpSecret
-import io.atlassian.authentication.onetime.core.HOTPGenerator
-import io.atlassian.authentication.onetime.core.TOTPGenerator
-import io.atlassian.authentication.onetime.core.HMACDigest
-import io.atlassian.authentication.onetime.core.OTPLength
-import io.atlassian.authentication.onetime.core.TOTP
-import io.atlassian.authentication.onetime.model.TOTPSecret
-import io.atlassian.authentication.onetime.service.DefaultTOTPService
-import io.atlassian.authentication.onetime.service.TOTPConfiguration
-import io.atlassian.authentication.onetime.service.TOTPVerificationResult
+import io.atlassian.onetime.core.HOTPGenerator
+import io.atlassian.onetime.core.TOTPGenerator
+import io.atlassian.onetime.core.HMACDigest
+import io.atlassian.onetime.core.OTPLength
+import io.atlassian.onetime.core.TOTP
+import io.atlassian.onetime.model.TOTPSecret
+import io.atlassian.onetime.service.DefaultTOTPService
+import io.atlassian.onetime.service.TOTPConfiguration
+import io.atlassian.onetime.service.TOTPVerificationResult
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.ints.shouldBeInRange
