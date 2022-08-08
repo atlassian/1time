@@ -12,27 +12,26 @@ repositories {
   mavenCentral()
 }
 
-
 java {
   withSourcesJar()
   withJavadocJar()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10")
     implementation("commons-codec:commons-codec:1.15")
     testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.12.5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:5.3.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.4.1")
-    testImplementation("io.kotest:kotest-property-jvm:5.4.0")
+    testImplementation("io.kotest:kotest-property-jvm:5.4.1")
     testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.2.5")
-    testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.4")
+    testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.5")
 }
 
-group = "io.atlassian.authentication"
+group = "com.atlassian"
 version = "1.0.0"
-description = "1time"
+description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
 
