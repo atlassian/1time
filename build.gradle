@@ -51,7 +51,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-javadoc.failOnError = false
 task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier.set('javadoc')
     from javadoc.destinationDir
@@ -61,6 +60,10 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "11"
     }
+}
+
+javadoc {
+    options.encoding = "UTF-8"
 }
 
 artifacts {

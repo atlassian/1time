@@ -11,6 +11,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    env:
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+
     steps:
 
       - name: "Checkout sources"
@@ -35,7 +39,4 @@ jobs:
 
       # Publishes to Artifactory only on push to the "release" branch.
       - name: "Publish"
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: chmod 755 gradlew && ./gradlew artifactoryPublish -x check --debug --stacktrace
+        run: ./gradlew assemble && ./gradlew check --info && ./gradlew artifactoryPublish -x check --info
