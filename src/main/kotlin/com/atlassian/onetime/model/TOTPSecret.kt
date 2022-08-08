@@ -1,4 +1,4 @@
-package io.atlassian.onetime.model
+package com.atlassian.onetime.model
 
 import org.apache.commons.codec.binary.Base32
 

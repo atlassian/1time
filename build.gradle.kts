@@ -29,7 +29,7 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.4")
 }
 
-group = "io.atlassian"
+group = "com.atlassian"
 version = "1.0.0"
 description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10

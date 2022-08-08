@@ -1,6 +1,6 @@
-package io.atlassian.onetime.core
+package com.atlassian.onetime.core
 
-import io.atlassian.onetime.model.TOTPSecret
+import com.atlassian.onetime.model.TOTPSecret
 import java.time.Clock
 
 data class TOTP(val value: String)

@@ -1,13 +1,13 @@
-package io.atlassian.onetime.io.atlassian.onetime.core
+package com.atlassian.onetime.com.atlassian.onetime.core
 
-import io.atlassian.onetime.arbInstant
-import io.atlassian.onetime.arbOtpLength
-import io.atlassian.onetime.arbTotpSecret
-import io.atlassian.onetime.core.TOTPGenerator
-import io.atlassian.onetime.core.HMACDigest
-import io.atlassian.onetime.core.OTPLength
-import io.atlassian.onetime.core.TOTP
-import io.atlassian.onetime.model.TOTPSecret
+import com.atlassian.onetime.arbInstant
+import com.atlassian.onetime.arbOtpLength
+import com.atlassian.onetime.arbTotpSecret
+import com.atlassian.onetime.core.TOTPGenerator
+import com.atlassian.onetime.core.HMACDigest
+import com.atlassian.onetime.core.OTPLength
+import com.atlassian.onetime.core.TOTP
+import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch

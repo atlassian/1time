@@ -1,11 +1,11 @@
-package io.atlassian.onetime
+package com.atlassian.onetime
 
-import io.atlassian.onetime.core.HMACDigest
-import io.atlassian.onetime.core.OTPLength
-import io.atlassian.onetime.model.EmailAddress
-import io.atlassian.onetime.model.EmailDomain
-import io.atlassian.onetime.model.Issuer
-import io.atlassian.onetime.model.TOTPSecret
+import com.atlassian.onetime.core.HMACDigest
+import com.atlassian.onetime.core.OTPLength
+import com.atlassian.onetime.model.EmailAddress
+import com.atlassian.onetime.model.EmailDomain
+import com.atlassian.onetime.model.Issuer
+import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.property.Arb
 import io.kotest.property.Exhaustive
 import io.kotest.property.Gen

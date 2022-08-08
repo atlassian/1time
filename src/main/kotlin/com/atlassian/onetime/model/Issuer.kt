@@ -1,3 +1,3 @@
-package io.atlassian.onetime.model
+package com.atlassian.onetime.model
 
 data class Issuer(val value: String)
