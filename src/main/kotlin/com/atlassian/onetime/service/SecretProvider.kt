@@ -1,6 +1,6 @@
-package io.atlassian.onetime.service
+package com.atlassian.onetime.service
 
-import io.atlassian.onetime.model.TOTPSecret
+import com.atlassian.onetime.model.TOTPSecret
 import java.security.SecureRandom
 
 fun interface SecretProvider {

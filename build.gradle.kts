@@ -12,7 +12,6 @@ repositories {
   mavenCentral()
 }
 
-
 java {
   withSourcesJar()
   withJavadocJar()
@@ -30,9 +29,9 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.4")
 }
 
-group = "io.atlassian.authentication"
+group = "com.atlassian"
 version = "1.0.0"
-description = "1time"
+description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
 

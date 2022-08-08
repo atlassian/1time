@@ -1,4 +1,4 @@
-package io.atlassian.onetime.core
+package com.atlassian.onetime.core
 
 import java.nio.ByteBuffer
 import kotlin.experimental.and

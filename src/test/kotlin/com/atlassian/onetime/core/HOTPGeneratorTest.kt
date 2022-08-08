@@ -1,12 +1,12 @@
-package io.atlassian.authentication.onetime.io.atlassian.onetime.core
+package com.atlassian.onetime.com.atlassian.onetime.core
 
-import io.atlassian.authentication.onetime.arbHMACDigest
-import io.atlassian.authentication.onetime.arbOtpLength
-import io.atlassian.authentication.onetime.arbTotpSecret
-import io.atlassian.onetime.core.HMACDigest
-import io.atlassian.onetime.core.HOTPGenerator
-import io.atlassian.onetime.core.OTPLength
-import io.atlassian.onetime.model.TOTPSecret
+import com.atlassian.onetime.arbHMACDigest
+import com.atlassian.onetime.arbOtpLength
+import com.atlassian.onetime.arbTotpSecret
+import com.atlassian.onetime.core.HMACDigest
+import com.atlassian.onetime.core.HOTPGenerator
+import com.atlassian.onetime.core.OTPLength
+import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual

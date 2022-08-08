@@ -1,10 +1,10 @@
-package io.atlassian.onetime.service
+package com.atlassian.onetime.service
 
-import io.atlassian.onetime.core.TOTP
-import io.atlassian.onetime.core.TOTPGenerator
-import io.atlassian.onetime.model.EmailAddress
-import io.atlassian.onetime.model.Issuer
-import io.atlassian.onetime.model.TOTPSecret
+import com.atlassian.onetime.core.TOTP
+import com.atlassian.onetime.core.TOTPGenerator
+import com.atlassian.onetime.model.EmailAddress
+import com.atlassian.onetime.model.Issuer
+import com.atlassian.onetime.model.TOTPSecret
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
