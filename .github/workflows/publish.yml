@@ -38,4 +38,4 @@ jobs:
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: chmod 755 gradlew && ./gradlew artifactoryPublish --stacktrace
+        run: chmod 755 gradlew && ./gradlew artifactoryPublish -x check --debug --stacktrace
