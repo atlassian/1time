@@ -29,7 +29,7 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.4")
 }
 
-group = "io.atlassian.authentication"
+group = "io.atlassian"
 version = "1.0.0"
 description = "1time"
 java.sourceCompatibility = JavaVersion.VERSION_1_10

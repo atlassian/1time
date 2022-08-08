@@ -1,4 +1,4 @@
-package io.atlassian.authentication.onetime
+package io.atlassian.onetime
 
 import io.atlassian.onetime.core.HMACDigest
 import io.atlassian.onetime.core.OTPLength

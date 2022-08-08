@@ -1,11 +1,11 @@
-package io.atlassian.authentication.onetime.io.atlassian.onetime.service
+package io.atlassian.onetime.io.atlassian.onetime.service
 
-import io.atlassian.authentication.onetime.arbEmailAddress
-import io.atlassian.authentication.onetime.arbHMACDigest
-import io.atlassian.authentication.onetime.arbInstant
-import io.atlassian.authentication.onetime.arbIssuer
-import io.atlassian.authentication.onetime.arbOtpLength
-import io.atlassian.authentication.onetime.arbTotpSecret
+import io.atlassian.onetime.arbEmailAddress
+import io.atlassian.onetime.arbHMACDigest
+import io.atlassian.onetime.arbInstant
+import io.atlassian.onetime.arbIssuer
+import io.atlassian.onetime.arbOtpLength
+import io.atlassian.onetime.arbTotpSecret
 import io.atlassian.onetime.core.HOTPGenerator
 import io.atlassian.onetime.core.TOTPGenerator
 import io.atlassian.onetime.core.HMACDigest

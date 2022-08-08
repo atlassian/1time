@@ -1,8 +1,9 @@
-package io.atlassian.authentication.onetime.io.atlassian.onetime.core
+package io.atlassian.onetime.io.atlassian.onetime.core
 
-import io.atlassian.authentication.onetime.arbHMACDigest
-import io.atlassian.authentication.onetime.arbOtpLength
-import io.atlassian.authentication.onetime.arbTotpSecret
+import io.atlassian.onetime.arbHMACDigest
+import io.atlassian.onetime.arbOtpLength
+import io.atlassian.onetime.arbTotpSecret
+import io.atlassian.onetime.arbTotpSecret
 import io.atlassian.onetime.core.HMACDigest
 import io.atlassian.onetime.core.HOTPGenerator
 import io.atlassian.onetime.core.OTPLength
