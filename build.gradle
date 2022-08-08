@@ -1,0 +1,136 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'com.jfrog.artifactory' version '4.16.1'
+    id 'signing'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'signing'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+group = 'com.atlassian'
+version = '1.0.0'
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
+    implementation 'commons-codec:commons-codec:1.15'
+
+    testImplementation 'io.mockk:mockk:1.12.5'
+    testImplementation 'io.kotest:kotest-runner-junit5-jvm:5.4.1'
+    testImplementation 'io.kotest:kotest-assertions-core-jvm:5.4.1'
+    testImplementation 'io.kotest:kotest-property-jvm:5.4.1'
+    testImplementation 'io.kotest.extensions:kotest-property-arrow-jvm:1.2.5'
+    testImplementation 'io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.5'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "Apache License 2.0"
+            url "http://www.apache.org/licenses/"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "docampoherrera"
+            name "Diego Ocampo"
+            email "docampoherrera@atlassian.com"
+        }
+    }
+
+    scm {
+        url "https://github.com/atlassian-labs/1time"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId project.group
+            artifactId project.name
+            version project.version
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'TOTP and HOTP generator and validator for multi-factor authentication')
+                root.appendNode('name', project.name)
+                root.appendNode('url', 'https://github.com/atlassian-labs/1time')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+artifactory {
+    publish {
+        contextUrl = 'https://packages.atlassian.com/'
+
+        repository {
+            repoKey = 'maven-central'
+            username = System.env.ARTIFACTORY_USER
+            password = System.env.ARTIFACTORY_KEY
+        }
+        defaults {
+            publications('maven')
+            publishIvy = false
+            publishBuildInfo = false
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys("$System.env.SIGNING_KEY", "$System.env.SIGNING_PASSWORD")
+    sign publishing.publications.maven
+}
