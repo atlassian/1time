@@ -31,7 +31,7 @@ dependencies {
 
 group = "io.atlassian"
 version = "1.0.0"
-description = "1time"
+description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
 

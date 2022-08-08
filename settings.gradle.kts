@@ -1,1 +1,1 @@
-rootProject.name = "1time"
+rootProject.name = "onetime"
