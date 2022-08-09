@@ -13,7 +13,6 @@ buildscript {
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.7.10'
-    id 'com.jfrog.artifactory' version '4.16.1'
     id 'signing'
     id 'org.jetbrains.dokka' version "1.7.10"
 }
@@ -63,10 +62,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "11"
     }
-}
-
-javadoc {
-    options.encoding = "UTF-8"
 }
 
 artifacts {
