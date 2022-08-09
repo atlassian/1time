@@ -30,7 +30,7 @@ repositories {
 }
 
 group = 'com.atlassian'
-version = '1.0.1'
+version = '1.0.0'
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.10'
@@ -117,6 +117,7 @@ publishing {
 artifactory {
     publish {
         contextUrl = 'https://packages.atlassian.com/'
+        minChecksumDeploySizeKb = 1
 
         repository {
             repoKey = 'maven-central'
