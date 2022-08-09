@@ -18,17 +18,12 @@ jobs:
     steps:
 
       - name: "Checkout sources"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v1
 
       - name: "Setup Java"
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v1
         with:
-          java-version: '11'
-          distribution: 'adopt'
-
-      - name: "Build"
-        run: chmod 755 gradlew && ./gradlew build
-
+          java-version: '11.0.9'
         # Populates ARTIFACTORY_USERNAME and ARTIFACTORY_API_KEY with
         # temporary username/password for publishing to packages.atlassian.com
       - name: Get publish token
