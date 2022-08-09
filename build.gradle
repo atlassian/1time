@@ -117,7 +117,7 @@ publishing {
 artifactory {
     publish {
         contextUrl = 'https://packages.atlassian.com/'
-        minChecksumDeploySizeKb = 1
+        minChecksumDeploySizeKb = 1024
 
         repository {
             repoKey = 'maven-central'
