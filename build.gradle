@@ -14,11 +14,12 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id 'signing'
-    id 'org.jetbrains.dokka' version "1.7.10"
+    id 'org.jetbrains.dokka' version '1.7.10'
+    id 'com.jfrog.artifactory' version '4.29.0'
 }
 
 apply plugin: 'java'
-apply plugin: "java-library"
+apply plugin: 'java-library'
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.artifactory'
@@ -48,8 +49,9 @@ test {
     useJUnitPlatform()
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set('sources')
+task sourcesJar(type: Jar) {
+    dependsOn classes
+    classifier "sources"
     from sourceSets.main.allSource
 }
 
@@ -62,11 +64,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "11"
     }
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
 }
 
 def pomConfig = {
@@ -87,13 +84,16 @@ def pomConfig = {
 
     scm {
         url "https://github.com/atlassian-labs/1time"
+        connection "https://github.com/atlassian-labs/1time"
+        developerConnection "https://github.com/atlassian-labs/1time"
     }
 }
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        onetime(MavenPublication) {
             from components.java
+
             artifact sourcesJar {
                 classifier "sources"
             }
@@ -114,25 +114,39 @@ publishing {
     }
 }
 
+tasks.withType(PublishToMavenRepository) {
+    dependsOn(build)
+}
+
+signing {
+    if (System.getenv("SIGNING_KEY") != null) {
+        useInMemoryPgpKeys(System.getenv("SIGNING_KEY"), System.getenv("SIGNING_PASSWORD"))
+        sign(publishing.publications)
+    }
+}
+
+javadoc {
+    options.encoding = "UTF-8"
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 artifactory {
     publish {
-        contextUrl = 'https://packages.atlassian.com/'
-        minChecksumDeploySizeKb = 1024
+        setContextUrl("https://packages.atlassian.com/")
 
         repository {
-            repoKey = 'maven-central'
-            username = System.env.ARTIFACTORY_USER
-            password = System.env.ARTIFACTORY_KEY
+            repoKey = "maven-central"
+            username = System.env.ARTIFACTORY_USERNAME
+            password = System.env.ARTIFACTORY_API_KEY
         }
         defaults {
-            publications('maven')
+            publications("onetime")
             publishIvy = false
             publishBuildInfo = false
         }
     }
-}
-
-signing {
-    useInMemoryPgpKeys("$System.env.SIGNING_KEY", "$System.env.SIGNING_PASSWORD")
-    sign publishing.publications.maven
 }
