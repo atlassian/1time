@@ -15,14 +15,12 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id 'signing'
     id 'org.jetbrains.dokka' version '1.7.10'
-    id 'com.jfrog.artifactory' version '4.29.0'
 }
 
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
 repositories {
@@ -90,6 +88,16 @@ def pomConfig = {
 }
 
 publishing {
+    repositories {
+        maven {
+            url = "https://packages.atlassian.com/maven-central"
+            credentials {
+                username = System.env.ARTIFACTORY_USERNAME
+                password = System.env.ARTIFACTORY_API_KEY
+            }
+        }
+    }
+
     publications {
         onetime(MavenPublication) {
             from components.java
@@ -132,21 +140,4 @@ javadoc {
 artifacts {
     archives sourcesJar
     archives javadocJar
-}
-
-artifactory {
-    publish {
-        setContextUrl("https://packages.atlassian.com/")
-
-        repository {
-            repoKey = "maven-central"
-            username = System.env.ARTIFACTORY_USERNAME
-            password = System.env.ARTIFACTORY_API_KEY
-        }
-        defaults {
-            publications("onetime")
-            publishIvy = false
-            publishBuildInfo = false
-        }
-    }
 }
