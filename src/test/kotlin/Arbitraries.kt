@@ -47,7 +47,7 @@ val arbHMACDigest: Gen<HMACDigest> = Exhaustive.collection(
 val arbDateNext20Years: Arb<LocalDateTime> = Arb.localDateTime(LocalDate.now().year, LocalDate.now().year + 20)
 
 val arbDateAroundUnixEpoch = Arb.localDateTime(
-  minLocalDateTime = LocalDateTime.of(1969, 12, 31, 0, 0),
+  minLocalDateTime = LocalDateTime.of(1970, 1, 1, 0, 0),
   maxLocalDateTime = LocalDateTime.of(1970, 2, 1, 0, 0)
 )
 
