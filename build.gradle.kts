@@ -22,7 +22,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.15")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.12.7")
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.3.2")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.4.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.4.2")
     testImplementation("io.kotest:kotest-property-jvm:5.4.2")
     testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.2.5")
