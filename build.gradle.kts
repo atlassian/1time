@@ -2,7 +2,7 @@
 plugins {
   kotlin("jvm") version "1.7.22"
   id("org.jetbrains.dokka") version "1.7.10"
-  id("com.jfrog.artifactory") version "4.29.0"
+  id("com.jfrog.artifactory") version "4.30.1"
   id("maven-publish")
   id("signing")
   application
