@@ -21,7 +21,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
     implementation("commons-codec:commons-codec:1.15")
     testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:5.4.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.4")
     testImplementation("io.kotest:kotest-property-jvm:5.5.4")
