@@ -1,7 +1,7 @@
 
 plugins {
   kotlin("jvm") version "1.8.10"
-  id("org.jetbrains.dokka") version "1.7.20"
+  id("org.jetbrains.dokka") version "1.8.10"
   id("maven-publish")
   id("signing")
   application
@@ -17,7 +17,7 @@ java {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10")
     implementation("commons-codec:commons-codec:1.15")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.13.4")
