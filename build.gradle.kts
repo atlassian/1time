@@ -2,7 +2,6 @@
 plugins {
   kotlin("jvm") version "1.8.10"
   id("org.jetbrains.dokka") version "1.7.20"
-  id("com.jfrog.artifactory") version "4.31.4"
   id("maven-publish")
   id("signing")
   application
@@ -58,10 +57,10 @@ tasks {
           packaging = "jar"
           name.set(project.name)
           description.set("TOTP and HOTP generator and validator for multi-factor authentication")
-          url.set("https://github.com/atlassian-labs/1time")
+          url.set("https://github.com/atlassian/1time")
           scm {
-            connection.set("git@github.com:atlassian-labs/1time.git")
-            url.set("https://github.com/atlassian-labs/1time.git")
+            connection.set("git@github.com:atlassian/1time.git")
+            url.set("https://github.com/atlassian/1time.git")
           }
           developers {
             developer {
@@ -80,6 +79,16 @@ tasks {
         }
       }
     }
+
+    repositories {
+      maven {
+        url = uri("https://packages.atlassian.com/maven-central")
+        credentials {
+          username = System.getenv("ARTIFACTORY_USERNAME")
+          password = System.getenv("ARTIFACTORY_API_KEY")
+        }
+      }
+    }
   }
 
   signing {
@@ -88,22 +97,5 @@ tasks {
       System.getenv("SIGNING_PASSWORD"),
     )
     sign(publishing.publications["release"])
-  }
-}
-
-artifactory {
-  publish {
-    setContextUrl("https://packages.atlassian.com/")
-
-    repository {
-      setRepoKey("maven-central")
-      setUsername(System.getenv("ARTIFACTORY_USERNAME"))
-      setPassword(System.getenv("ARTIFACTORY_API_KEY"))
-    }
-    defaults {
-      publications("release")
-      setPublishIvy(false)
-      clientConfig.publisher.isPublishBuildInfo = false
-    }
   }
 }
