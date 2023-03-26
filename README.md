@@ -5,7 +5,9 @@ Java/Kotlin lightweight implementation of RFC-6238 and RFC-4226 to generate and 
 
 ## Maven / gradle dependency
 
-Check the latest package at [https://github.com/atlassian/1time/packages/](https://github.com/atlassian/1time/packages/)
+Check the latest package at [https://github.com/atlassian/1time/packages/](https://github.com/atlassian/1time/packages/). 
+
+Also check Maven central on: https://mvnrepository.com/artifact/com.atlassian/onetime
 
 ## Quick start
 
