@@ -29,7 +29,7 @@ dependencies {
 }
 
 group = "com.atlassian"
-version = "1.0.0-labs"
+version = "1.0.1"
 description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
