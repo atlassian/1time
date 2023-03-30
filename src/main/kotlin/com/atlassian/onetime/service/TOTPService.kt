@@ -8,7 +8,6 @@ import com.atlassian.onetime.model.TOTPSecret
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.time.Clock
 
 interface TOTPService {
 
@@ -42,9 +41,9 @@ class DefaultTOTPService(
   private val totpConfiguration: TOTPConfiguration = TOTPConfiguration()
 ) : TOTPService {
 
-  override suspend  fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
+  override suspend fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
-  override suspend   fun generateTOTPUrl(
+  override suspend fun generateTOTPUrl(
     totpSecret: TOTPSecret,
     emailAddress: EmailAddress,
     issuer: Issuer
@@ -72,4 +71,3 @@ class DefaultTOTPService(
     }
   }
 }
-

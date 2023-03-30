@@ -6,11 +6,11 @@ import com.atlassian.onetime.arbInstant
 import com.atlassian.onetime.arbIssuer
 import com.atlassian.onetime.arbOtpLength
 import com.atlassian.onetime.arbTotpSecret
-import com.atlassian.onetime.core.HOTPGenerator
-import com.atlassian.onetime.core.TOTPGenerator
 import com.atlassian.onetime.core.HMACDigest
+import com.atlassian.onetime.core.HOTPGenerator
 import com.atlassian.onetime.core.OTPLength
 import com.atlassian.onetime.core.TOTP
+import com.atlassian.onetime.core.TOTPGenerator
 import com.atlassian.onetime.model.TOTPSecret
 import com.atlassian.onetime.service.DefaultTOTPService
 import com.atlassian.onetime.service.TOTPConfiguration
@@ -35,8 +35,8 @@ import java.time.ZoneOffset
 class DefaultTOTPServiceTest : FunSpec({
 
   context("Generate TOTP secret") {
-    test("should round trip"){
-      checkAll(arbTotpSecret){ secret ->
+    test("should round trip") {
+      checkAll(arbTotpSecret) { secret ->
         val encoded = secret.base32Encoded
         val fromEncoded = TOTPSecret.fromBase32EncodedString(encoded)
         fromEncoded shouldBe secret
@@ -72,7 +72,7 @@ class DefaultTOTPServiceTest : FunSpec({
             QueryParam("issuer", issuer.value),
             QueryParam("algorithm", digest.toQueryParam()),
             QueryParam("digits", otpLength.value.toString()),
-            QueryParam("period", timeStep.toString()),
+            QueryParam("period", timeStep.toString())
           )
         }
       }
@@ -101,7 +101,7 @@ class DefaultTOTPServiceTest : FunSpec({
         arbOtpLength,
         arbTotpSecret,
         Arb.int(30..90), // time step
-        Arb.int(0..3)    // past steps
+        Arb.int(0..3) // past steps
       ) { time, otpLength, secret, timeStep, allowedPastSteps ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
@@ -151,7 +151,7 @@ class DefaultTOTPServiceTest : FunSpec({
         arbOtpLength,
         arbTotpSecret,
         Arb.int(30..90), // time step
-        Arb.int(0..3)    // future steps
+        Arb.int(0..3) // future steps
       ) { time, otpLength, secret, timeStep, allowedFutureSteps ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
@@ -197,7 +197,7 @@ class DefaultTOTPServiceTest : FunSpec({
         arbInstant,
         arbOtpLength,
         arbTotpSecret,
-        Arb.int(30..90), // time step
+        Arb.int(30..90) // time step
       ) { time, otpLength, secret, timeStep ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
@@ -229,7 +229,7 @@ class DefaultTOTPServiceTest : FunSpec({
 
     test("should reject invalid TOTP") {
       checkAll(
-        arbTotpSecret,
+        arbTotpSecret
       ) { secret ->
         given(TestStateMockedTOTP()) {
           val verificationResult = defaultTOTPService.verify(
@@ -255,7 +255,7 @@ open class TestState(
   val otpLength: OTPLength = OTPLength.SIX,
   val digest: HMACDigest = HMACDigest.SHA1,
   val allowedPastTimeSteps: Int = 0,
-  val allowedFutureTimeSteps: Int = 0,
+  val allowedFutureTimeSteps: Int = 0
 ) {
 
   private val totpGenerator = TOTPGenerator(
@@ -283,7 +283,7 @@ class TestStateMockedTOTP(
   otpLength = OTPLength.SIX,
   digest = HMACDigest.SHA1,
   allowedPastTimeSteps = 0,
-  allowedFutureTimeSteps = 0,
+  allowedFutureTimeSteps = 0
 ) {
 
   private val totpGenerator = mockk<TOTPGenerator>(relaxed = true) {
@@ -329,5 +329,3 @@ private fun splitQuery(query: String): List<QueryParam> =
       QueryParam(name, value)
     }
   }
-
-

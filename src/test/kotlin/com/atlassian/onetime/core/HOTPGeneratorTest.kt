@@ -49,7 +49,7 @@ class HOTPGeneratorTest : FunSpec() {
       }
 
       test("should generate HOTPs defined in RFC 4226 test cases") {
-        //See https://datatracker.ietf.org/doc/html/rfc4226#page-32
+        // See https://datatracker.ietf.org/doc/html/rfc4226#page-32
         val key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
         given(TestState(otpLength = OTPLength.SIX, digestSpecification = HMACDigest.SHA1)) {
           val generatedOtps = (0L..9L).map { counter ->
@@ -71,7 +71,7 @@ class HOTPGeneratorTest : FunSpec() {
       }
 
       test("should generate HOTPs defined in RFC 6238 test cases") {
-        //See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
+        // See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
         val sha1Key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
         val sha256Key = TOTPSecret.fromBase32EncodedString(
           "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ" +
@@ -81,7 +81,6 @@ class HOTPGeneratorTest : FunSpec() {
           "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ" +
             "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA"
         )
-
 
         val expectedResults = mapOf(
           // key      counter.        Digest                  Expected OTP
@@ -102,7 +101,7 @@ class HOTPGeneratorTest : FunSpec() {
           sha256Key to (66666666L to (HMACDigest.SHA512 to "38618901")),
           sha1Key to (666666666L to (HMACDigest.SHA1 to "65353130")),
           sha256Key to (666666666L to (HMACDigest.SHA256 to "77737706")),
-          sha512Key to (666666666L to (HMACDigest.SHA512 to "47863826")),
+          sha512Key to (666666666L to (HMACDigest.SHA512 to "47863826"))
         )
 
         for (entry in expectedResults.entries) {
@@ -113,7 +112,7 @@ class HOTPGeneratorTest : FunSpec() {
 
           HOTPGenerator(
             otpLength = OTPLength.EIGHT,
-            digest = digest,
+            digest = digest
           ).generate(key = key.value, counter).value shouldBe expectedOtp
         }
       }
@@ -129,7 +128,7 @@ class HOTPGeneratorTest : FunSpec() {
             val key = TOTPSecret.fromBase32EncodedString("A".repeat(keyLength))
             HOTPGenerator(
               otpLength = otpLength,
-              digest = digest,
+              digest = digest
             ).generate(key = key.value, counter).value.length shouldBe otpLength.value
           }
         }
@@ -150,7 +149,7 @@ class HOTPGeneratorTest : FunSpec() {
   ) {
     val hotpGenerator = HOTPGenerator(
       otpLength = otpLength,
-      digest = digestSpecification,
+      digest = digestSpecification
     )
   }
 }

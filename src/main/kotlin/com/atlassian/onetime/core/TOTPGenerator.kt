@@ -18,7 +18,6 @@ class TOTPGenerator(
   override val digest: HMACDigest = HMACDigest.SHA1
 ) : OTPGenerator(otpLength, digest) {
 
-
   /**
    * Generates the TOTPs given the [totpSecret] with delay steps and future steps.
    * [delaySteps] (positive) number of past time steps that are to be generated
