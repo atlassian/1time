@@ -41,6 +41,16 @@ class DefaultTOTPService(
   private val totpConfiguration: TOTPConfiguration = TOTPConfiguration()
 ) : TOTPService {
 
+  companion object {
+    private const val SCHEME = "otpauth"
+    private const val TYPE = "totp"
+    private const val SECRET_QUERY_PARAM = "secret"
+    private const val ISSUER_QUERY_PARAM = "issuer"
+    private const val ALGORITHM_QUERY_PARAM = "algorithm"
+    private const val DIGITS_QUERY_PARAM = "digits"
+    private const val PERIOD_QUERY_PARAM = "period"
+
+  }
   override suspend fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
   override suspend fun generateTOTPUrl(
@@ -48,14 +58,15 @@ class DefaultTOTPService(
     emailAddress: EmailAddress,
     issuer: Issuer
   ): URI {
+
     val encodedEmailAddress: String = URLEncoder.encode(emailAddress.value, StandardCharsets.UTF_8)
     val encodedIssuer: String = URLEncoder.encode(issuer.value, StandardCharsets.UTF_8)
-    val template = "otpauth://totp/$encodedIssuer:$encodedEmailAddress?" +
-      "secret=${totpSecret.base32Encoded}" +
-      "&issuer=$encodedIssuer" +
-      "&algorithm=${totpGenerator.digest.toQueryParam()}" +
-      "&digits=${totpGenerator.otpLength.value}" +
-      "&period=${totpGenerator.timeStepSeconds}"
+    val template = "$SCHEME://$TYPE/$encodedIssuer:$encodedEmailAddress?" +
+      "$SECRET_QUERY_PARAM=${totpSecret.base32Encoded}" +
+      "&$ISSUER_QUERY_PARAM=$encodedIssuer" +
+      "&$ALGORITHM_QUERY_PARAM=${totpGenerator.digest.toQueryParam()}" +
+      "&$DIGITS_QUERY_PARAM=${totpGenerator.otpLength.value}" +
+      "&$PERIOD_QUERY_PARAM=${totpGenerator.timeStepSeconds}"
     return URI(template)
   }
 
