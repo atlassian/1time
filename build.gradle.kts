@@ -1,4 +1,4 @@
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
+
 
 plugins {
   kotlin("jvm") version "1.8.10"
@@ -98,12 +98,5 @@ tasks {
       System.getenv("SIGNING_PASSWORD")
     )
     sign(publishing.publications["release"])
-  }
-}
-
-configure<KtlintExtension> {
-  filter {
-    exclude("**/generated/**")
-    include("**/kotlin/**")
   }
 }

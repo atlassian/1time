@@ -1,11 +1,8 @@
-package com.atlassian.onetime.com.atlassian.onetime.core
+package com.atlassian.onetime.core
 
 import com.atlassian.onetime.arbHMACDigest
 import com.atlassian.onetime.arbOtpLength
 import com.atlassian.onetime.arbTotpSecret
-import com.atlassian.onetime.core.HMACDigest
-import com.atlassian.onetime.core.HOTPGenerator
-import com.atlassian.onetime.core.OTPLength
 import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly

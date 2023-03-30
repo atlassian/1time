@@ -1,12 +1,8 @@
-package com.atlassian.onetime.com.atlassian.onetime.core
+package com.atlassian.onetime.core
 
 import com.atlassian.onetime.arbInstant
 import com.atlassian.onetime.arbOtpLength
 import com.atlassian.onetime.arbTotpSecret
-import com.atlassian.onetime.core.TOTPGenerator
-import com.atlassian.onetime.core.HMACDigest
-import com.atlassian.onetime.core.OTPLength
-import com.atlassian.onetime.core.TOTP
 import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -109,7 +105,7 @@ class TOTPGeneratorTest : FunSpec() {
           sha256Key   to (20000000000L    to (HMACDigest.SHA256   to "77737706")),
           sha512Key   to (20000000000L    to (HMACDigest.SHA512   to "47863826"))
         )
-        /* ktlint-enable no-wildcard-imports */
+        /* ktlint-enable */
 
         for (entry in expectedResults.entries) {
           val key = entry.key

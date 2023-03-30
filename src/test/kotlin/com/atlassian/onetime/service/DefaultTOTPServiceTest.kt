@@ -1,4 +1,4 @@
-package com.atlassian.onetime.com.atlassian.onetime.service
+package com.atlassian.onetime.service
 
 import com.atlassian.onetime.arbEmailAddress
 import com.atlassian.onetime.arbHMACDigest
@@ -12,9 +12,6 @@ import com.atlassian.onetime.core.OTPLength
 import com.atlassian.onetime.core.TOTP
 import com.atlassian.onetime.core.TOTPGenerator
 import com.atlassian.onetime.model.TOTPSecret
-import com.atlassian.onetime.service.DefaultTOTPService
-import com.atlassian.onetime.service.TOTPConfiguration
-import com.atlassian.onetime.service.TOTPVerificationResult
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.ints.shouldBeInRange

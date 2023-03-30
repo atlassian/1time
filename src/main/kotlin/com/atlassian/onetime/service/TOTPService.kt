@@ -49,7 +49,6 @@ class DefaultTOTPService(
     private const val ALGORITHM_QUERY_PARAM = "algorithm"
     private const val DIGITS_QUERY_PARAM = "digits"
     private const val PERIOD_QUERY_PARAM = "period"
-
   }
   override suspend fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
@@ -58,7 +57,6 @@ class DefaultTOTPService(
     emailAddress: EmailAddress,
     issuer: Issuer
   ): URI {
-
     val encodedEmailAddress: String = URLEncoder.encode(emailAddress.value, StandardCharsets.UTF_8)
     val encodedIssuer: String = URLEncoder.encode(issuer.value, StandardCharsets.UTF_8)
     val template = "$SCHEME://$TYPE/$encodedIssuer:$encodedEmailAddress?" +
