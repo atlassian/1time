@@ -1,10 +1,12 @@
 
+
 plugins {
   kotlin("jvm") version "1.8.10"
   id("org.jetbrains.dokka") version "1.8.10"
   id("maven-publish")
   id("signing")
   application
+  id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
 repositories {
@@ -17,25 +19,24 @@ java {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10")
-    implementation("commons-codec:commons-codec:1.15")
-    testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.13.4")
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.5.5")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.5")
-    testImplementation("io.kotest:kotest-property-jvm:5.5.5")
-    testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.3.0")
-    testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.3.0")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10")
+  implementation("commons-codec:commons-codec:1.15")
+  testImplementation(kotlin("test"))
+  testImplementation("io.mockk:mockk:1.13.4")
+  testImplementation("io.kotest:kotest-runner-junit5-jvm:5.5.5")
+  testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.5")
+  testImplementation("io.kotest:kotest-property-jvm:5.5.5")
+  testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.3.0")
+  testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.3.0")
 }
 
 group = "com.atlassian"
-version = "1.0.0"
+version = "1.0.1"
 description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
-
 tasks.withType<JavaCompile>() {
-    options.encoding = "UTF-8"
+  options.encoding = "UTF-8"
 }
 
 tasks {
@@ -94,7 +95,7 @@ tasks {
   signing {
     useInMemoryPgpKeys(
       System.getenv("SIGNING_KEY"),
-      System.getenv("SIGNING_PASSWORD"),
+      System.getenv("SIGNING_PASSWORD")
     )
     sign(publishing.publications["release"])
   }

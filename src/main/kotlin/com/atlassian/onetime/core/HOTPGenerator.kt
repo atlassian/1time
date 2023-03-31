@@ -67,5 +67,4 @@ class HOTPGenerator(
 ) : OTPGenerator(otpLength, digest) {
 
   fun generate(key: ByteArray, counter: Long): HOTP = generateOtp(key, counter)
-
 }

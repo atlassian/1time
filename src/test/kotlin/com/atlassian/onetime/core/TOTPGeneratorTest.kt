@@ -1,12 +1,8 @@
-package com.atlassian.onetime.com.atlassian.onetime.core
+package com.atlassian.onetime.core
 
 import com.atlassian.onetime.arbInstant
 import com.atlassian.onetime.arbOtpLength
 import com.atlassian.onetime.arbTotpSecret
-import com.atlassian.onetime.core.TOTPGenerator
-import com.atlassian.onetime.core.HMACDigest
-import com.atlassian.onetime.core.OTPLength
-import com.atlassian.onetime.core.TOTP
 import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -78,7 +74,7 @@ class TOTPGeneratorTest : FunSpec() {
       }
 
       test("should generate TOTPs defined in RFC 6238 test cases") {
-        //See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
+        // See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
         val sha1Key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
         val sha256Key = TOTPSecret.fromBase32EncodedString(
           "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA"
@@ -87,9 +83,8 @@ class TOTPGeneratorTest : FunSpec() {
           "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZ" +
             "DGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA"
         )
-
+        /* ktlint-disable */
         val expectedResults = mapOf(
-          // @formatter:off
           // key      epoch time(s)       Digest                  Expected OTP
           sha1Key     to (59L             to (HMACDigest.SHA1     to "94287082")),
           sha256Key   to (59L             to (HMACDigest.SHA256   to "46119246")),
@@ -108,9 +103,9 @@ class TOTPGeneratorTest : FunSpec() {
           sha256Key   to (2000000000L     to (HMACDigest.SHA512   to "38618901")),
           sha1Key     to (20000000000L    to (HMACDigest.SHA1     to "65353130")),
           sha256Key   to (20000000000L    to (HMACDigest.SHA256   to "77737706")),
-          sha512Key   to (20000000000L    to (HMACDigest.SHA512   to "47863826")),
-          // @formatter:on
+          sha512Key   to (20000000000L    to (HMACDigest.SHA512   to "47863826"))
         )
+        /* ktlint-enable */
 
         for (entry in expectedResults.entries) {
           val key = entry.key
