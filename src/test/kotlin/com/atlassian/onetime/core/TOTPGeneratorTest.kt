@@ -4,7 +4,9 @@ import com.atlassian.onetime.arbInstant
 import com.atlassian.onetime.arbOtpLength
 import com.atlassian.onetime.arbTotpSecret
 import com.atlassian.onetime.model.TOTPSecret
+import io.kotest.core.Tuple4
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.property.Arb
@@ -73,7 +75,7 @@ class TOTPGeneratorTest : FunSpec() {
         }
       }
 
-      test("should generate TOTPs defined in RFC 6238 test cases") {
+      context("TOTPs defined in RFC 6238 test cases") {
         // See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
         val sha1Key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
         val sha256Key = TOTPSecret.fromBase32EncodedString(
@@ -83,43 +85,34 @@ class TOTPGeneratorTest : FunSpec() {
           "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZ" +
             "DGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA"
         )
-        /* ktlint-disable */
-        val expectedResults = mapOf(
-          // key      epoch time(s)       Digest                  Expected OTP
-          sha1Key     to (59L             to (HMACDigest.SHA1     to "94287082")),
-          sha256Key   to (59L             to (HMACDigest.SHA256   to "46119246")),
-          sha512Key   to (59L             to (HMACDigest.SHA512   to "90693936")),
-          sha1Key     to (1111111109L     to (HMACDigest.SHA1     to "07081804")),
-          sha256Key   to (1111111109L     to (HMACDigest.SHA256   to "68084774")),
-          sha512Key   to (1111111109L     to (HMACDigest.SHA512   to "25091201")),
-          sha1Key     to (1111111111L     to (HMACDigest.SHA1     to "14050471")),
-          sha256Key   to (1111111111L     to (HMACDigest.SHA256   to "67062674")),
-          sha512Key   to (1111111111L     to (HMACDigest.SHA512   to "99943326")),
-          sha1Key     to (1234567890L     to (HMACDigest.SHA1     to "89005924")),
-          sha256Key   to (1234567890L     to (HMACDigest.SHA256   to "91819424")),
-          sha512Key   to (1234567890L     to (HMACDigest.SHA512   to "93441116")),
-          sha1Key     to (2000000000L     to (HMACDigest.SHA1     to "69279037")),
-          sha256Key   to (2000000000L     to (HMACDigest.SHA256   to "90698825")),
-          sha256Key   to (2000000000L     to (HMACDigest.SHA512   to "38618901")),
-          sha1Key     to (20000000000L    to (HMACDigest.SHA1     to "65353130")),
-          sha256Key   to (20000000000L    to (HMACDigest.SHA256   to "77737706")),
-          sha512Key   to (20000000000L    to (HMACDigest.SHA512   to "47863826"))
-        )
-        /* ktlint-enable */
-
-        for (entry in expectedResults.entries) {
-          val key = entry.key
-          val time = Clock.fixed(Instant.ofEpochSecond(entry.value.first), ZoneOffset.UTC)
-          val digest = entry.value.second.first
-          val expectedOtp = entry.value.second.second
-
+        withData(
+          Tuple4(sha1Key, 59L, HMACDigest.SHA1, "94287082"),
+          Tuple4(sha256Key, 59L, HMACDigest.SHA256, "46119246"),
+          Tuple4(sha512Key, 59L, HMACDigest.SHA512, "90693936"),
+          Tuple4(sha1Key, 1111111109L, HMACDigest.SHA1, "07081804"),
+          Tuple4(sha256Key, 1111111109L, HMACDigest.SHA256, "68084774"),
+          Tuple4(sha512Key, 1111111109L, HMACDigest.SHA512, "25091201"),
+          Tuple4(sha1Key, 1111111111L, HMACDigest.SHA1, "14050471"),
+          Tuple4(sha256Key, 1111111111L, HMACDigest.SHA256, "67062674"),
+          Tuple4(sha512Key, 1111111111L, HMACDigest.SHA512, "99943326"),
+          Tuple4(sha1Key, 1234567890L, HMACDigest.SHA1, "89005924"),
+          Tuple4(sha256Key, 1234567890L, HMACDigest.SHA256, "91819424"),
+          Tuple4(sha512Key, 1234567890L, HMACDigest.SHA512, "93441116"),
+          Tuple4(sha1Key, 2000000000L, HMACDigest.SHA1, "69279037"),
+          Tuple4(sha256Key, 2000000000L, HMACDigest.SHA256, "90698825"),
+          Tuple4(sha512Key, 2000000000L, HMACDigest.SHA512, "38618901"),
+          Tuple4(sha1Key, 20000000000L, HMACDigest.SHA1, "65353130"),
+          Tuple4(sha256Key, 20000000000L, HMACDigest.SHA256, "77737706"),
+          Tuple4(sha512Key, 20000000000L, HMACDigest.SHA512, "47863826")
+        ) { (key, epoch, digest, otp) ->
+          val time = Clock.fixed(Instant.ofEpochSecond(epoch), ZoneOffset.UTC)
           TOTPGenerator(
             otpLength = OTPLength.EIGHT,
             digest = digest,
             startTime = 0,
             clock = time,
             timeStepSeconds = 30
-          ).generateCurrent(key) shouldBe TOTP(expectedOtp)
+          ).generateCurrent(key) shouldBe TOTP(otp)
         }
       }
     }
