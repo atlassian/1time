@@ -13,6 +13,7 @@ import com.atlassian.onetime.core.TOTP
 import com.atlassian.onetime.core.TOTPGenerator
 import com.atlassian.onetime.model.TOTPSecret
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.datatest.withData
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.ints.shouldBeInRange
 import io.kotest.matchers.should
@@ -72,6 +73,16 @@ class DefaultTOTPServiceTest : FunSpec({
             QueryParam("period", timeStep.toString())
           )
         }
+      }
+    }
+
+    context("URL encoding") {
+      withData(
+        " " to "%20",
+        "*" to "%2A",
+        "~" to "~"
+      ) { (input, expectation) ->
+        input.urlEncode() shouldBe expectation
       }
     }
   }

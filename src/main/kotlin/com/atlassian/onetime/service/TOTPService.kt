@@ -7,7 +7,6 @@ import com.atlassian.onetime.model.Issuer
 import com.atlassian.onetime.model.TOTPSecret
 import java.net.URI
 import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 interface TOTPService {
 
@@ -57,8 +56,8 @@ class DefaultTOTPService(
     emailAddress: EmailAddress,
     issuer: Issuer
   ): URI {
-    val encodedEmailAddress: String = URLEncoder.encode(emailAddress.value, StandardCharsets.UTF_8)
-    val encodedIssuer: String = URLEncoder.encode(issuer.value, StandardCharsets.UTF_8)
+    val encodedIssuer: String = issuer.value.urlEncode()
+    val encodedEmailAddress: String = emailAddress.value.urlEncode()
     val template = "$SCHEME://$TYPE/$encodedIssuer:$encodedEmailAddress?" +
       "$SECRET_QUERY_PARAM=${totpSecret.base32Encoded}" +
       "&$ISSUER_QUERY_PARAM=$encodedIssuer" +
@@ -80,3 +79,8 @@ class DefaultTOTPService(
     }
   }
 }
+
+fun String.urlEncode(): String = URLEncoder.encode(this, Charsets.UTF_8)
+  .replace("+", "%20")
+  .replace("*", "%2A")
+  .replace("%7E", "~")
