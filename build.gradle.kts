@@ -1,4 +1,4 @@
-
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   kotlin("jvm") version "1.8.20"
@@ -34,10 +34,18 @@ dependencies {
 group = "com.atlassian"
 version = "1.0.1"
 description = "onetime"
-java.sourceCompatibility = JavaVersion.VERSION_1_10
 
-tasks.withType<JavaCompile>() {
+java.sourceCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_11
+
+tasks.withType<JavaCompile> {
   options.encoding = "UTF-8"
+}
+
+tasks.withType<KotlinCompile> {
+  kotlinOptions {
+    jvmTarget = "11"
+  }
 }
 
 tasks {
