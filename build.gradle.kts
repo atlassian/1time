@@ -26,7 +26,7 @@ dependencies {
   testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.5")
   testImplementation("io.kotest:kotest-framework-datatest:5.5.5")
   testImplementation("io.kotest:kotest-runner-junit5-jvm:5.5.5")
-  testImplementation("io.kotest:kotest-property-jvm:5.5.5")
+  testImplementation("io.kotest:kotest-property-jvm:5.6.1")
   testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.3.1")
   testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.3.1")
 }
