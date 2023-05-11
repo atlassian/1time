@@ -23,28 +23,43 @@ dependencies {
   implementation("commons-codec:commons-codec:1.15")
   testImplementation(kotlin("test"))
   testImplementation("io.mockk:mockk:1.13.5")
-  testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.5")
+  testImplementation("io.kotest:kotest-assertions-core:5.5.5")
   testImplementation("io.kotest:kotest-framework-datatest:5.5.5")
-  testImplementation("io.kotest:kotest-runner-junit5-jvm:5.5.5")
-  testImplementation("io.kotest:kotest-property-jvm:5.5.5")
-  testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.3.1")
-  testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.3.1")
+  testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
+  testImplementation("io.kotest:kotest-property:5.5.5")
+  testImplementation("io.kotest.extensions:kotest-property-arrow:1.3.1")
+  testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.3.1")
 }
 
 group = "com.atlassian"
 version = "1.0.1"
 description = "onetime"
 
-java.sourceCompatibility = JavaVersion.VERSION_11
-java.targetCompatibility = JavaVersion.VERSION_11
+val javaVersion = JavaVersion.VERSION_17
 
 tasks.withType<JavaCompile> {
   options.encoding = "UTF-8"
+  sourceCompatibility = javaVersion.toString()
+  targetCompatibility = javaVersion.toString()
 }
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
+    freeCompilerArgs += listOf(
+      "-progressive",
+      "-java-parameters",
+      "-opt-in=kotlin.time.ExperimentalTime",
+      "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+      "-opt-in=kotlin.RequiresOptIn"
+    )
+
+    // https://youtrack.jetbrains.com/issue/KTIJ-1224
+    // This is really an IDE bug.
+    // Without explicit languageVersion the Gradle build does compile 1.5 structures (sealed interfaces). So, for Gradle the value is 1.5.
+    // The wrong value is only in IDE settings.
+    languageVersion = "1.8"
+    apiVersion = "1.8"
   }
 }
 
