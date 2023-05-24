@@ -118,7 +118,7 @@ class TOTPGeneratorTest : FunSpec() {
     }
   }
 
-  private suspend fun given(state: TestState = TestState(), test: suspend TestState.(TOTPGenerator) -> Unit) {
+  private fun given(state: TestState = TestState(), test: TestState.(TOTPGenerator) -> Unit) {
     with(state) {
       test(state.totpGenerator)
     }

@@ -4,7 +4,7 @@ import com.atlassian.onetime.model.TOTPSecret
 import java.security.SecureRandom
 
 fun interface SecretProvider {
-  suspend fun generateSecret(): TOTPSecret
+  fun generateSecret(): TOTPSecret
 }
 
 class AsciiRangeSecretProvider : SecretProvider {
@@ -13,14 +13,14 @@ class AsciiRangeSecretProvider : SecretProvider {
     val ASCII_RANGE: CharRange = (' '..'z')
   }
 
-  override suspend fun generateSecret() = TOTPSecret(
+  override fun generateSecret() = TOTPSecret(
     (1..20).map { ASCII_RANGE.random() }.joinToString("").toByteArray()
   )
 }
 
 class RandomSecretProvider : SecretProvider {
 
-  override suspend fun generateSecret() =
+  override fun generateSecret() =
     SecureRandom().let {
       val byteArray = ByteArray(20)
       it.nextBytes(byteArray)

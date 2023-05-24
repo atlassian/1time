@@ -127,7 +127,7 @@ class HOTPGeneratorTest : FunSpec() {
     }
   }
 
-  private suspend fun given(state: TestState = TestState(), test: suspend TestState.(HOTPGenerator) -> Unit) {
+  private fun given(state: TestState = TestState(), test: TestState.(HOTPGenerator) -> Unit) {
     with(state) {
       test(state.hotpGenerator)
     }

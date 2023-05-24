@@ -50,7 +50,6 @@ tasks.withType<KotlinCompile> {
       "-progressive",
       "-java-parameters",
       "-opt-in=kotlin.time.ExperimentalTime",
-      "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
       "-opt-in=kotlin.RequiresOptIn"
     )
 
