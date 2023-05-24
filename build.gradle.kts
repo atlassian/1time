@@ -32,7 +32,7 @@ dependencies {
 }
 
 group = "com.atlassian"
-version = "1.0.2"
+version = "2.0.0"
 description = "onetime"
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
