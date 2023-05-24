@@ -10,15 +10,15 @@ import java.net.URLEncoder
 
 interface TOTPService {
 
-  suspend fun generateTotpSecret(): TOTPSecret
+  fun generateTotpSecret(): TOTPSecret
 
-  suspend fun generateTOTPUrl(
+  fun generateTOTPUrl(
     totpSecret: TOTPSecret,
     emailAddress: EmailAddress,
     issuer: Issuer
   ): URI
 
-  suspend fun verify(
+  fun verify(
     code: TOTP,
     totpSecret: TOTPSecret
   ): TOTPVerificationResult
@@ -49,9 +49,9 @@ class DefaultTOTPService(
     private const val DIGITS_QUERY_PARAM = "digits"
     private const val PERIOD_QUERY_PARAM = "period"
   }
-  override suspend fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
+  override fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
-  override suspend fun generateTOTPUrl(
+  override fun generateTOTPUrl(
     totpSecret: TOTPSecret,
     emailAddress: EmailAddress,
     issuer: Issuer
@@ -67,7 +67,7 @@ class DefaultTOTPService(
     return URI(template)
   }
 
-  override suspend fun verify(
+  override fun verify(
     code: TOTP,
     totpSecret: TOTPSecret
   ): TOTPVerificationResult {
