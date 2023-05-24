@@ -251,7 +251,7 @@ class DefaultTOTPServiceTest : FunSpec({
   }
 })
 
-private suspend fun given(state: TestState = TestState(), test: suspend TestState.(DefaultTOTPService) -> Unit) {
+private fun given(state: TestState = TestState(), test: TestState.(DefaultTOTPService) -> Unit) {
   with(state) {
     test(state.defaultTOTPService)
   }

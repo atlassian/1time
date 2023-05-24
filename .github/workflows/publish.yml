@@ -23,8 +23,7 @@ jobs:
       - name: "Setup Java"
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '17'
         # Populates ARTIFACTORY_USERNAME and ARTIFACTORY_API_KEY with
         # temporary username/password for publishing to packages.atlassian.com
       - name: Get publish token

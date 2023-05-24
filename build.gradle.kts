@@ -1,12 +1,12 @@
-
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.20"
+  kotlin("jvm") version "1.8.21"
   id("org.jetbrains.dokka") version "1.8.10"
   id("maven-publish")
   id("signing")
   application
-  id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
+  id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
 }
 
 repositories {
@@ -19,25 +19,47 @@ java {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.21")
   implementation("commons-codec:commons-codec:1.15")
   testImplementation(kotlin("test"))
-  testImplementation("io.mockk:mockk:1.13.4")
-  testImplementation("io.kotest:kotest-assertions-core-jvm:5.5.5")
-  testImplementation("io.kotest:kotest-framework-datatest:5.5.5")
-  testImplementation("io.kotest:kotest-runner-junit5-jvm:5.5.5")
-  testImplementation("io.kotest:kotest-property-jvm:5.5.5")
-  testImplementation("io.kotest.extensions:kotest-property-arrow-jvm:1.3.0")
-  testImplementation("io.kotest.extensions:kotest-assertions-arrow-jvm:1.3.0")
+  testImplementation("io.mockk:mockk:1.13.5")
+  testImplementation("io.kotest:kotest-assertions-core:5.6.2")
+  testImplementation("io.kotest:kotest-framework-datatest:5.6.2")
+  testImplementation("io.kotest:kotest-runner-junit5:5.6.2")
+  testImplementation("io.kotest:kotest-property:5.6.2")
+  testImplementation("io.kotest.extensions:kotest-property-arrow:1.3.3")
+  testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.3.3")
 }
 
 group = "com.atlassian"
 version = "2.0.0"
 description = "onetime"
-java.sourceCompatibility = JavaVersion.VERSION_1_10
 
-tasks.withType<JavaCompile>() {
+val javaVersion = JavaVersion.VERSION_17
+
+tasks.withType<JavaCompile> {
   options.encoding = "UTF-8"
+  sourceCompatibility = javaVersion.toString()
+  targetCompatibility = javaVersion.toString()
+}
+
+tasks.withType<KotlinCompile> {
+  kotlinOptions {
+    jvmTarget = "17"
+    freeCompilerArgs += listOf(
+      "-progressive",
+      "-java-parameters",
+      "-opt-in=kotlin.time.ExperimentalTime",
+      "-opt-in=kotlin.RequiresOptIn"
+    )
+
+    // https://youtrack.jetbrains.com/issue/KTIJ-1224
+    // This is really an IDE bug.
+    // Without explicit languageVersion the Gradle build does compile 1.5 structures (sealed interfaces). So, for Gradle the value is 1.5.
+    // The wrong value is only in IDE settings.
+    languageVersion = "1.8"
+    apiVersion = "1.8"
+  }
 }
 
 tasks {
