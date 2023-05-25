@@ -3,6 +3,10 @@
 
 Java/Kotlin lightweight implementation of RFC-6238 and RFC-4226 to generate and validate time-based one-time passwords (TOTP).
 
+Community
+---------
+* [Slack channel](https://atlassian1time.slack.com/): Get an invite to the channel by filling in [this form](https://forms.gle/iAtMVmtaZoszUH7EA) 
+
 ## Maven / gradle dependency
 
 Check the latest package at [https://github.com/atlassian/1time/packages/](https://github.com/atlassian/1time/packages/). 
