@@ -31,8 +31,20 @@ data class TOTPConfiguration(
 )
 
 sealed class TOTPVerificationResult {
-  object InvalidTotp : TOTPVerificationResult()
-  data class Success(val index: Int) : TOTPVerificationResult()
+
+  abstract val isSuccess: Boolean
+  val isFailure: Boolean
+    get() = !this.isSuccess
+
+  object InvalidTotp : TOTPVerificationResult() {
+    override val isSuccess: Boolean
+      get() = false
+  }
+
+  data class Success(val index: Int) : TOTPVerificationResult() {
+    override val isSuccess: Boolean
+      get() = true
+  }
 }
 
 class DefaultTOTPService(
