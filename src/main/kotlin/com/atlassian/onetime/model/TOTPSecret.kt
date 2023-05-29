@@ -12,9 +12,7 @@ data class TOTPSecret(val value: ByteArray) {
 
     other as TOTPSecret
 
-    if (!value.contentEquals(other.value)) return false
-
-    return true
+    return value.contentEquals(other.value)
   }
 
   override fun hashCode(): Int {
