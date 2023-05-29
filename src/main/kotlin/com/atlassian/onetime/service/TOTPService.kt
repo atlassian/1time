@@ -7,6 +7,8 @@ import com.atlassian.onetime.model.Issuer
 import com.atlassian.onetime.model.TOTPSecret
 import java.net.URI
 import java.net.URLEncoder
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 interface TOTPService {
 
@@ -31,19 +33,19 @@ data class TOTPConfiguration(
 )
 
 sealed class TOTPVerificationResult {
+  object InvalidTotp : TOTPVerificationResult()
+  data class Success(val index: Int) : TOTPVerificationResult()
 
-  abstract val isSuccess: Boolean
-  val isFailure: Boolean
-    get() = !this.isSuccess
-
-  object InvalidTotp : TOTPVerificationResult() {
-    override val isSuccess: Boolean
-      get() = false
+  @OptIn(ExperimentalContracts::class)
+  fun isSuccess(): Boolean {
+    contract { returns(true) implies (this@TOTPVerificationResult is Success) }
+    return this@TOTPVerificationResult is Success
   }
 
-  data class Success(val index: Int) : TOTPVerificationResult() {
-    override val isSuccess: Boolean
-      get() = true
+  @OptIn(ExperimentalContracts::class)
+  fun isFailure(): Boolean {
+    contract { returns(true) implies (this@TOTPVerificationResult is InvalidTotp) }
+    return this@TOTPVerificationResult is InvalidTotp
   }
 }
 

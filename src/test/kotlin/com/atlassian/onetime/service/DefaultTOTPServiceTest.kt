@@ -132,8 +132,8 @@ class DefaultTOTPServiceTest : FunSpec({
               secret
             )
 
-            verificationResult.isSuccess shouldBe true
-            verificationResult.isFailure shouldBe false
+            verificationResult.isSuccess() shouldBe true
+            verificationResult.isFailure() shouldBe false
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
             (verificationResult as TOTPVerificationResult.Success).run {
               this.index shouldBeInRange (-allowedPastSteps..0)
@@ -185,8 +185,8 @@ class DefaultTOTPServiceTest : FunSpec({
               secret
             )
 
-            verificationResult.isSuccess shouldBe true
-            verificationResult.isFailure shouldBe false
+            verificationResult.isSuccess() shouldBe true
+            verificationResult.isFailure() shouldBe false
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
             (verificationResult as TOTPVerificationResult.Success).run {
               this.index shouldBeInRange (0..allowedFutureSteps)
@@ -233,8 +233,8 @@ class DefaultTOTPServiceTest : FunSpec({
               secret
             )
 
-            verificationResult.isSuccess shouldBe true
-            verificationResult.isFailure shouldBe false
+            verificationResult.isSuccess() shouldBe true
+            verificationResult.isFailure() shouldBe false
             verificationResult should beInstanceOf<TOTPVerificationResult.Success>()
             (verificationResult as TOTPVerificationResult.Success).run {
               this.index shouldBe 0
@@ -254,8 +254,8 @@ class DefaultTOTPServiceTest : FunSpec({
             secret
           )
 
-          verificationResult.isFailure shouldBe true
-          verificationResult.isSuccess shouldBe false
+          verificationResult.isFailure() shouldBe true
+          verificationResult.isSuccess() shouldBe false
           verificationResult should beInstanceOf<TOTPVerificationResult.InvalidTotp>()
         }
       }
