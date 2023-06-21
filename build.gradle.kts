@@ -20,7 +20,7 @@ java {
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
-  implementation("commons-codec:commons-codec:1.15")
+  implementation("commons-codec:commons-codec:1.16.0")
   testImplementation(kotlin("test"))
   testImplementation("io.mockk:mockk:1.13.5")
   testImplementation("io.kotest:kotest-assertions-core:5.6.2")
