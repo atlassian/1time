@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.21"
-  id("org.jetbrains.dokka") version "1.8.10"
+  kotlin("jvm") version "1.8.22"
+  id("org.jetbrains.dokka") version "1.8.20"
   id("maven-publish")
   id("signing")
   application
-  id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
+  id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 repositories {
@@ -19,8 +19,8 @@ java {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.21")
-  implementation("commons-codec:commons-codec:1.15")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
+  implementation("commons-codec:commons-codec:1.16.0")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
   testImplementation(kotlin("test"))
   testImplementation("io.mockk:mockk:1.13.5")
@@ -33,7 +33,7 @@ dependencies {
 }
 
 group = "com.atlassian"
-version = "2.0.0"
+version = "2.0.1"
 description = "onetime"
 
 val javaVersion = JavaVersion.VERSION_17
