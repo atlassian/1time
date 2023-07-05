@@ -33,7 +33,7 @@ dependencies {
 }
 
 group = "com.atlassian"
-version = "2.0.1"
+version = "2.0.2"
 description = "onetime"
 
 val javaVersion = JavaVersion.VERSION_17
