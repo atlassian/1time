@@ -19,7 +19,7 @@ import io.kotest.property.checkAll
 class SecretProviderTest : FunSpec({
 
   context("Secret providers") {
-    test("should generate secret in the ASCII range") {
+    test("should generate secret correctly") {
       checkAll(500, arbSecretProvider) { provider ->
         val secret = provider()
         secret.base32Encoded.forEach {
