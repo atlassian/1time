@@ -1,29 +1,16 @@
 package com.atlassian.onetime.service
 
 import com.atlassian.onetime.model.TOTPSecret
-import java.security.SecureRandom
+import java.util.concurrent.CompletableFuture
 
 fun interface SecretProvider {
   fun generateSecret(): TOTPSecret
 }
 
-class AsciiRangeSecretProvider : SecretProvider {
-
-  companion object {
-    val ASCII_RANGE: CharRange = (' '..'z')
-  }
-
-  override fun generateSecret() = TOTPSecret(
-    (1..20).map { ASCII_RANGE.random() }.joinToString("").toByteArray()
-  )
+fun interface AsyncSecretProvider {
+  fun generateSecret(): CompletableFuture<TOTPSecret>
 }
 
-class RandomSecretProvider : SecretProvider {
-
-  override fun generateSecret() =
-    SecureRandom().let {
-      val byteArray = ByteArray(20)
-      it.nextBytes(byteArray)
-      TOTPSecret(byteArray)
-    }
+fun interface CPSSecretProvider {
+  suspend fun generateSecret(): TOTPSecret
 }
