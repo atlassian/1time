@@ -47,15 +47,129 @@ Upon an enrolment request, the system will
 - Generate a secret and store it for the user and other information the system deems necessary.
 - Generate a TOTP URI for further QR code generation that will allow the user to enrol with mobile apps such as Google Authenticator
 
-This library generates secrets and TOTP URIs.
 
 #### Generating a secret
 
+This library provides two out of the box secret generators:
+
+- ASCII range secret generator
+- Random secret generator
+
+But it is not limited to that. If you want to use a more complex secret generator using, for example [GCP](https://cloud.google.com/kms/docs/generate-random) or [AWS](https://docs.aws.amazon.com/kms/latest/APIReference/API_GenerateRandom.html), you'll benefit from implementing a non-blocking secret generator.
+
+1time provides 3 examples for this sake:
+
+- Blocking generator
+- Generator that returns `CompletableFuture`
+- Generator using Kotlin coroutines and thus relying on continuations (CPS)
+
+##### Blocking generator
+
 ```kotlin
-val service = DefaultTOTPService()
-val secret = service.generateTotpSecret()
-secret.base32Encoded //NIQXUILREVGHIUKNORKHSJDHKMWS6UTY
+fun interface SecretProvider {
+  fun generateSecret(): TOTPSecret
+}
 ```
+
+This is the simplest generator that doesn't rely on any complex generator. We provide two examples ready to use, ASCII and random:
+
+```kotlin
+class AsciiRangeSecretProvider : SecretProvider {
+
+  companion object {
+    private val ASCII_RANGE: CharRange = (' '..'z')
+
+    fun generateSecret() = TOTPSecret(
+      (1..20).map { ASCII_RANGE.random() }.joinToString("").toByteArray()
+    )
+  }
+
+  override fun generateSecret() = AsciiRangeSecretProvider.generateSecret()
+}
+```
+
+```kotlin
+class RandomSecretProvider : SecretProvider {
+
+  companion object {
+    fun generateSecret() =
+      SecureRandom().let {
+        val byteArray = ByteArray(20)
+        it.nextBytes(byteArray)
+        TOTPSecret(byteArray)
+      }
+  }
+
+  override fun generateSecret() = RandomSecretProvider.generateSecret()
+}
+```
+
+To use any of these, just do:
+
+```kotlin
+val secret = RandomSecretProvider.generateSecret()
+```
+
+##### Completable future generator
+
+This is particularly useful when dealing with a complex, external resource for better random generation and when using Java.
+
+```kotlin
+fun interface AsyncSecretProvider {
+  fun generateSecret(): CompletableFuture<TOTPSecret>
+}
+```
+
+We provide examples of these too, e.g.:
+
+```kotlin
+class AsyncAsciiRangeSecretProvider : AsyncSecretProvider {
+
+  override fun generateSecret(): CompletableFuture<TOTPSecret> =
+    CompletableFuture.supplyAsync {
+      AsciiRangeSecretProvider.generateSecret()
+    }
+}
+```
+
+To use any of these, just do:
+
+```kotlin
+val secret: CompletableFuture<TOTPSecret> = AsyncAsciiRangeSecretProvider().generateSecret()
+//handle completable future
+```
+
+##### Continuation (CPS) generator
+
+If you are using Kotlin, this should be the default approach. Even if dealing with external random generator, it will be non-blocking by default:
+
+```kotlin
+fun interface CPSSecretProvider {
+  suspend fun generateSecret(): TOTPSecret
+}
+```
+
+We provide examples of these too:
+
+```kotlin
+class CPSAsciiRangeSecretProvider : CPSSecretProvider {
+
+  override suspend fun generateSecret(): TOTPSecret =
+    AsciiRangeSecretProvider.generateSecret()
+}
+```
+
+To use any of these, just do:
+
+```kotlin
+runBlocking { 
+  val secret: TOTPSecret = CPSAsciiRangeSecretProvider().generateSecret()
+  // use secret
+}
+``` 
+Or in your `suspend` functions without blocking.
+
+
 #### Generating a TOTP URI
 
 ```kotlin
@@ -70,7 +184,7 @@ totpUri // otpauth://totp/Acme+Co:jsmith%40acme.com?secret=NIQXUILREVGHIUKNORKHS
 
 Once generated the totpUrl, the system can use any library of choice to generate the TOTP QR code. For example:
 
-<img height="150" src="docs/img/totp-qr.png" title="TOTP QR code" width="150"/>
+<img height="400" src="docs/img/totp-qr.png" title="TOTP QR code" width="400" alt="totp-qr"/>
 
 #### Verifying enrolled user
 
@@ -168,15 +282,6 @@ val service = DefaultTOTPService(
   - `secretProvider`: By default we provide `AsciiRangeSecretProvider`. This is a random key generator that generates 20 bytes in the ASCII range. This is useful for when you need the raw secret value to be composed of printable characters. You can provide your own Secret provider by extending `SecretProvider` functional interface.
   - `allowedPastSteps`: By default, this is 0. As specified by [RFC-6238](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2), the verifier should accept the TOTP from the previous time step to cater for possible network delays. If you want to accept past windows as valid, increase this number. 
   - `allowedFutureSteps`: By default, this is 0. Same as `allowedPastSteps` but to cater for possible clock drifts in which the prover's clock is slightly in the future relative to the verifier's. If you want to accept future time windows as valid, increase this number. More on time windows on the [next section](#prover-clock-delays-and-verifier-allowed-windows).
-
-## Secret providers
-
-We include two secret providers
-
-- `AsciiRangeSecretProvider`: Will generate 20 random bytes in the ASCII range. This enables the raw value to be printable and easier for transport / debugging.
-- `RandomSecretProvider`: Will generate 20 random bytes in the entire byte range. 
-
-If you want to use better random generators such as AWS KMS, you can implement your own `SecretProvider` and use such provider in the `totpConfiguration` of the `DefaultTOTPService`.
 
 ## Prover clock delays and verifier allowed windows
 

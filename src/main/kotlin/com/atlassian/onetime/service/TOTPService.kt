@@ -12,8 +12,6 @@ import kotlin.contracts.contract
 
 interface TOTPService {
 
-  fun generateTotpSecret(): TOTPSecret
-
   fun generateTOTPUrl(
     totpSecret: TOTPSecret,
     emailAddress: EmailAddress,
@@ -27,7 +25,6 @@ interface TOTPService {
 }
 
 data class TOTPConfiguration(
-  val secretProvider: SecretProvider = AsciiRangeSecretProvider(),
   val allowedPastSteps: Int = 0,
   val allowedFutureSteps: Int = 0
 )
@@ -63,7 +60,6 @@ class DefaultTOTPService(
     private const val DIGITS_QUERY_PARAM = "digits"
     private const val PERIOD_QUERY_PARAM = "period"
   }
-  override fun generateTotpSecret(): TOTPSecret = totpConfiguration.secretProvider.generateSecret()
 
   override fun generateTOTPUrl(
     totpSecret: TOTPSecret,
