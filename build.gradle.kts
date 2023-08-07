@@ -6,7 +6,7 @@ plugins {
   id("maven-publish")
   id("signing")
   application
-  id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+  id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
 }
 
 repositories {
