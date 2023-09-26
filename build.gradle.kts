@@ -29,7 +29,7 @@ dependencies {
   testImplementation("io.kotest:kotest-runner-junit5:5.7.2")
   testImplementation("io.kotest:kotest-property:5.7.2")
   testImplementation("io.kotest.extensions:kotest-property-arrow:1.3.3")
-  testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.3.3")
+  testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.4.0")
 }
 
 group = "com.atlassian"
