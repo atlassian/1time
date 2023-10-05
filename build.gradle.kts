@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.22"
-  id("org.jetbrains.dokka") version "1.8.20"
+  kotlin("jvm") version "1.9.10"
+  id("org.jetbrains.dokka") version "1.9.0"
   id("maven-publish")
   id("signing")
   application
-  id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+  id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
 }
 
 repositories {
@@ -19,18 +19,18 @@ java {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
   implementation("commons-codec:commons-codec:1.16.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
   testImplementation(kotlin("test"))
-  testImplementation("io.mockk:mockk:1.13.5")
-  testImplementation("io.kotest:kotest-framework-datatest:5.6.2")
-  testImplementation("io.kotest:kotest-runner-junit5:5.6.2")
-  testImplementation("io.kotest:kotest-property:5.6.2")
+  testImplementation("io.mockk:mockk:1.13.8")
+  testImplementation("io.kotest:kotest-framework-datatest:5.7.2")
+  testImplementation("io.kotest:kotest-runner-junit5:5.7.2")
+  testImplementation("io.kotest:kotest-property:5.7.2")
 }
 
 group = "com.atlassian"
-version = "2.0.1"
+version = "2.0.2"
 description = "onetime"
 
 val javaVersion = JavaVersion.VERSION_17
