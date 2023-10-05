@@ -1,12 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.9.10"
-  id("org.jetbrains.dokka") version "1.9.0"
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.ktlint)
+  alias(libs.plugins.dokka)
   id("maven-publish")
   id("signing")
-  application
-  id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
 }
 
 repositories {
@@ -19,14 +18,14 @@ java {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
-  implementation("commons-codec:commons-codec:1.16.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-  testImplementation(kotlin("test"))
-  testImplementation("io.mockk:mockk:1.13.8")
-  testImplementation("io.kotest:kotest-framework-datatest:5.7.2")
-  testImplementation("io.kotest:kotest-runner-junit5:5.7.2")
-  testImplementation("io.kotest:kotest-property:5.7.2")
+  implementation(libs.kotlin.stdlib)
+  implementation(libs.commonsCodecs)
+  implementation(libs.kotlinx.coroutinesCore)
+
+  testImplementation(libs.mockk)
+  testImplementation(libs.kotest.frameworkDatatest)
+  testImplementation(libs.kotest.runnerJUnit5)
+  testImplementation(libs.kotest.property)
 }
 
 group = "com.atlassian"
