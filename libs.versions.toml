@@ -10,7 +10,6 @@ mockk = "1.13.8"
 
 [bundles]
 kotest = [
-  "kotest-assertionsCore",
   "kotest-property",
   "kotest-frameworkDatatest"
 ]
@@ -22,7 +21,6 @@ kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-co
 
 # Kotest
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
-kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 kotest-frameworkDatatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
 
@@ -32,9 +30,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 # Commons codecs
 commonsCodecs = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
 
-
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-allOpen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaPlugin" }
