@@ -1,17 +1,34 @@
-# 1time
+# Atlassian 1time
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
 Java/Kotlin lightweight implementation of RFC-6238 and RFC-4226 to generate and validate time-based one-time passwords (TOTP).
 
 Community
 ---------
-* [Slack channel](https://atlassian1time.slack.com/): Get an invite to the channel by filling in [this form](https://forms.gle/iAtMVmtaZoszUH7EA) 
+* Get an invite to the Slack channel by filling in [this form](https://forms.gle/iAtMVmtaZoszUH7EA).
 
-## Maven / gradle dependency
+## Maven / Gradle dependency
 
-Check the latest package at [https://github.com/atlassian/1time/packages/](https://github.com/atlassian/1time/packages/). 
+Check the latest package at Maven central on: https://mvnrepository.com/artifact/com.atlassian/onetime.
 
-Also check Maven central on: https://mvnrepository.com/artifact/com.atlassian/onetime
+### Maven:
+```xml
+<dependency>
+    <groupId>com.atlassian</groupId>
+    <artifactId>onetime</artifactId>
+    <version>2.0.2</version>
+</dependency>
+```
+
+### Gradle:
+```kotlin
+implementation("com.atlassian:onetime:2.0.2")
+```
+
+### SBT: 
+```scala
+libraryDependencies += "com.atlassian" % "onetime" % "2.0.2"
+```
 
 ## Quick start
 
