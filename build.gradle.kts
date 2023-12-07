@@ -43,12 +43,13 @@ tasks.withType<JavaCompile> {
 tasks.withType<KotlinCompile> {
   kotlinOptions {
     jvmTarget = "17"
-    freeCompilerArgs += listOf(
-      "-progressive",
-      "-java-parameters",
-      "-opt-in=kotlin.time.ExperimentalTime",
-      "-opt-in=kotlin.RequiresOptIn"
-    )
+    freeCompilerArgs +=
+      listOf(
+        "-progressive",
+        "-java-parameters",
+        "-opt-in=kotlin.time.ExperimentalTime",
+        "-opt-in=kotlin.RequiresOptIn",
+      )
 
     // https://youtrack.jetbrains.com/issue/KTIJ-1224
     // This is really an IDE bug.
@@ -115,7 +116,7 @@ tasks {
   signing {
     useInMemoryPgpKeys(
       System.getenv("SIGNING_KEY"),
-      System.getenv("SIGNING_PASSWORD")
+      System.getenv("SIGNING_PASSWORD"),
     )
     sign(publishing.publications["release"])
   }

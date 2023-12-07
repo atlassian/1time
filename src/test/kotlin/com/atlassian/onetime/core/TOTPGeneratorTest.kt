@@ -40,7 +40,7 @@ class TOTPGeneratorTest : FunSpec() {
           arbInstant,
           arbTotpSecret,
           Arb.int(0..5),
-          Arb.int(0..5)
+          Arb.int(0..5),
         ) { time, secret, pastSteps, futureSteps ->
           given(TestState(clock = Clock.fixed(time, ZoneOffset.UTC))) {
             val otps = totpGenerator.generate(secret, pastSteps, futureSteps)
@@ -54,7 +54,7 @@ class TOTPGeneratorTest : FunSpec() {
           arbInstant,
           arbTotpSecret,
           Arb.int(-5..0),
-          Arb.int(-5..0)
+          Arb.int(-5..0),
         ) { time, secret, pastSteps, futureSteps ->
           given(TestState(clock = Clock.fixed(time, ZoneOffset.UTC))) {
             totpGenerator.generate(secret, pastSteps, futureSteps).size shouldBe 1
@@ -65,7 +65,7 @@ class TOTPGeneratorTest : FunSpec() {
       test("should be represented by strings of the specified length") {
         checkAll(
           arbOtpLength,
-          arbTotpSecret
+          arbTotpSecret,
         ) { otpLength, secret ->
           given(TestState(otpLength = otpLength)) {
             val totp = totpGenerator.generateCurrent(secret)
@@ -78,13 +78,15 @@ class TOTPGeneratorTest : FunSpec() {
       context("TOTPs defined in RFC 6238 test cases") {
         // See https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
         val sha1Key = TOTPSecret.fromBase32EncodedString("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ")
-        val sha256Key = TOTPSecret.fromBase32EncodedString(
-          "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA"
-        )
-        val sha512Key = TOTPSecret.fromBase32EncodedString(
-          "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZ" +
-            "DGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA"
-        )
+        val sha256Key =
+          TOTPSecret.fromBase32EncodedString(
+            "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZA",
+          )
+        val sha512Key =
+          TOTPSecret.fromBase32EncodedString(
+            "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZ" +
+              "DGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQGEZDGNA",
+          )
         withData(
           Tuple4(sha1Key, 59L, HMACDigest.SHA1, "94287082"),
           Tuple4(sha256Key, 59L, HMACDigest.SHA256, "46119246"),
@@ -103,7 +105,7 @@ class TOTPGeneratorTest : FunSpec() {
           Tuple4(sha512Key, 2000000000L, HMACDigest.SHA512, "38618901"),
           Tuple4(sha1Key, 20000000000L, HMACDigest.SHA1, "65353130"),
           Tuple4(sha256Key, 20000000000L, HMACDigest.SHA256, "77737706"),
-          Tuple4(sha512Key, 20000000000L, HMACDigest.SHA512, "47863826")
+          Tuple4(sha512Key, 20000000000L, HMACDigest.SHA512, "47863826"),
         ) { (key, epoch, digest, otp) ->
           val time = Clock.fixed(Instant.ofEpochSecond(epoch), ZoneOffset.UTC)
           TOTPGenerator(
@@ -111,14 +113,17 @@ class TOTPGeneratorTest : FunSpec() {
             digest = digest,
             startTime = 0,
             clock = time,
-            timeStepSeconds = 30
+            timeStepSeconds = 30,
           ).generateCurrent(key) shouldBe TOTP(otp)
         }
       }
     }
   }
 
-  private fun given(state: TestState = TestState(), test: TestState.(TOTPGenerator) -> Unit) {
+  private fun given(
+    state: TestState = TestState(),
+    test: TestState.(TOTPGenerator) -> Unit,
+  ) {
     with(state) {
       test(state.totpGenerator)
     }
@@ -128,15 +133,15 @@ class TOTPGeneratorTest : FunSpec() {
     val clock: Clock = Clock.systemUTC(),
     val timeStep: Int = 30,
     val otpLength: OTPLength = OTPLength.SIX,
-    val digestSpecification: HMACDigest = HMACDigest.SHA1
+    val digestSpecification: HMACDigest = HMACDigest.SHA1,
   ) {
-
-    val totpGenerator = TOTPGenerator(
-      startTime = 0,
-      timeStepSeconds = timeStep,
-      otpLength = otpLength,
-      digest = digestSpecification,
-      clock = clock
-    )
+    val totpGenerator =
+      TOTPGenerator(
+        startTime = 0,
+        timeStepSeconds = timeStep,
+        otpLength = otpLength,
+        digest = digestSpecification,
+        clock = clock,
+      )
   }
 }

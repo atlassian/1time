@@ -15,9 +15,8 @@ class TOTPGenerator(
   val startTime: Int = 0,
   val timeStepSeconds: Int = 30,
   override val otpLength: OTPLength = OTPLength.SIX,
-  override val digest: HMACDigest = HMACDigest.SHA1
+  override val digest: HMACDigest = HMACDigest.SHA1,
 ) : OTPGenerator(otpLength, digest) {
-
   /**
    * Generates the TOTPs given the [totpSecret] with delay steps and future steps.
    * [delaySteps] (positive) number of past time steps that are to be generated
@@ -26,7 +25,11 @@ class TOTPGenerator(
    * Returns a list of TOTPs. This will contain all past steps (if [delaySteps] > 0),
    * followed by the current step and then possibly followed by all future TOTPs if specified.
    */
-  fun generate(totpSecret: TOTPSecret, delaySteps: Int = 0, futureSteps: Int = 0): List<TOTP> {
+  fun generate(
+    totpSecret: TOTPSecret,
+    delaySteps: Int = 0,
+    futureSteps: Int = 0,
+  ): List<TOTP> {
     val step: Long = ((clock.millis() / 1000) - startTime) / timeStepSeconds
     return ((step - delaySteps until step) + step + (step + 1..step + futureSteps))
       .map { generateOtp(totpSecret.value, it) }

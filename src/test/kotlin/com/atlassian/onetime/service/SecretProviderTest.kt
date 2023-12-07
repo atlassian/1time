@@ -35,23 +35,26 @@ val arbBlockingAsciiRangeSecretProvider: Arb<() -> TOTPSecret> = Arb.constant { 
 val arbAsyncAsciiRangeSecretProvider: Arb<() -> TOTPSecret> = Arb.constant { AsyncAsciiRangeSecretProvider().generateSecret().get() }
 val arbCPSAsciiRangeSecretProvider: Arb<() -> TOTPSecret> = Arb.constant { runBlocking { CPSAsciiRangeSecretProvider().generateSecret() } }
 
-val arbAsciiRangeSecretProvider: Arb<() -> TOTPSecret> = Arb.choice(
-  arbBlockingAsciiRangeSecretProvider,
-  arbAsyncAsciiRangeSecretProvider,
-  arbCPSAsciiRangeSecretProvider
-)
+val arbAsciiRangeSecretProvider: Arb<() -> TOTPSecret> =
+  Arb.choice(
+    arbBlockingAsciiRangeSecretProvider,
+    arbAsyncAsciiRangeSecretProvider,
+    arbCPSAsciiRangeSecretProvider,
+  )
 
 val arbBlockingRandomSecretProvider: Arb<() -> TOTPSecret> = Arb.constant { RandomSecretProvider().generateSecret() }
 val arbAsyncRandomSecretProvider: Arb<() -> TOTPSecret> = Arb.constant { AsyncRandomSecretProvider().generateSecret().get() }
 val arbCPSRandomSecretProvider: Arb<() -> TOTPSecret> = Arb.constant { runBlocking { CPSRandomSecretProvider().generateSecret() } }
 
-val arbRandomSecretProvider: Arb<() -> TOTPSecret> = Arb.choice(
-  arbBlockingRandomSecretProvider,
-  arbAsyncRandomSecretProvider,
-  arbCPSRandomSecretProvider
-)
+val arbRandomSecretProvider: Arb<() -> TOTPSecret> =
+  Arb.choice(
+    arbBlockingRandomSecretProvider,
+    arbAsyncRandomSecretProvider,
+    arbCPSRandomSecretProvider,
+  )
 
-val arbSecretProvider: Arb<() -> TOTPSecret> = Arb.choice(
-  arbRandomSecretProvider,
-  arbAsciiRangeSecretProvider
-)
+val arbSecretProvider: Arb<() -> TOTPSecret> =
+  Arb.choice(
+    arbRandomSecretProvider,
+    arbAsciiRangeSecretProvider,
+  )
