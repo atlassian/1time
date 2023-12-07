@@ -5,6 +5,8 @@ import com.atlassian.onetime.arbHMACDigest
 import com.atlassian.onetime.arbInstant
 import com.atlassian.onetime.arbIssuer
 import com.atlassian.onetime.arbOtpLength
+import com.atlassian.onetime.arbSteps
+import com.atlassian.onetime.arbTimeStep
 import com.atlassian.onetime.arbTotpSecret
 import com.atlassian.onetime.core.HMACDigest
 import com.atlassian.onetime.core.HOTPGenerator
@@ -51,27 +53,29 @@ class DefaultTOTPServiceTest : FunSpec({
         arbIssuer,
         arbOtpLength,
         arbHMACDigest,
-        Arb.int(1..60)
+        Arb.int(1..60),
       ) { secret, email, issuer, otpLength, digest, timeStep ->
         given(
-          TestState(timeStep = timeStep, otpLength = otpLength, digest = digest)
+          TestState(timeStep = timeStep, otpLength = otpLength, digest = digest),
         ) {
-          val uri = defaultTOTPService.generateTOTPUrl(
-            secret,
-            email,
-            issuer
-          )
+          val uri =
+            defaultTOTPService.generateTOTPUrl(
+              secret,
+              email,
+              issuer,
+            )
 
           uri.scheme shouldBe "otpauth"
           uri.authority shouldBe "totp"
           uri.path shouldBe "/${issuer.value}:${email.value}"
-          uri.queryParams() shouldContainInOrder listOf(
-            QueryParam("secret", secret.base32Encoded),
-            QueryParam("issuer", issuer.value),
-            QueryParam("algorithm", digest.toQueryParam()),
-            QueryParam("digits", otpLength.value.toString()),
-            QueryParam("period", timeStep.toString())
-          )
+          uri.queryParams() shouldContainInOrder
+            listOf(
+              QueryParam("secret", secret.base32Encoded),
+              QueryParam("issuer", issuer.value),
+              QueryParam("algorithm", digest.toQueryParam()),
+              QueryParam("digits", otpLength.value.toString()),
+              QueryParam("period", timeStep.toString()),
+            )
         }
       }
     }
@@ -80,7 +84,7 @@ class DefaultTOTPServiceTest : FunSpec({
       withData(
         " " to "%20",
         "*" to "%2A",
-        "~" to "~"
+        "~" to "~",
       ) { (input, expectation) ->
         input.urlEncode() shouldBe expectation
       }
@@ -108,8 +112,8 @@ class DefaultTOTPServiceTest : FunSpec({
         arbInstant,
         arbOtpLength,
         arbTotpSecret,
-        Arb.int(30..90), // time step
-        Arb.int(0..3) // past steps
+        arbTimeStep,
+        arbSteps,
       ) { time, otpLength, secret, timeStep, allowedPastSteps ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
@@ -122,15 +126,16 @@ class DefaultTOTPServiceTest : FunSpec({
               clock = Clock.fixed(Instant.ofEpochSecond(serverTimeInSeconds), ZoneOffset.UTC),
               timeStep = timeStep,
               otpLength = otpLength,
-              allowedPastTimeSteps = allowedPastSteps
-            )
+              allowedPastTimeSteps = allowedPastSteps,
+            ),
           ) {
             val delayedClock = Clock.fixed(Instant.ofEpochSecond(clientTime), ZoneOffset.UTC)
             val userInputTotp = localTOTPGeneration(secret, delayedClock, otpLength, timeStep)
-            val verificationResult = defaultTOTPService.verify(
-              userInputTotp,
-              secret
-            )
+            val verificationResult =
+              defaultTOTPService.verify(
+                userInputTotp,
+                secret,
+              )
 
             verificationResult.isSuccess() shouldBe true
             verificationResult.isFailure() shouldBe false
@@ -161,8 +166,8 @@ class DefaultTOTPServiceTest : FunSpec({
         arbInstant,
         arbOtpLength,
         arbTotpSecret,
-        Arb.int(30..90), // time step
-        Arb.int(0..3) // future steps
+        arbTimeStep,
+        arbSteps,
       ) { time, otpLength, secret, timeStep, allowedFutureSteps ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
@@ -175,15 +180,16 @@ class DefaultTOTPServiceTest : FunSpec({
               clock = Clock.fixed(Instant.ofEpochSecond(serverTimeInSeconds), ZoneOffset.UTC),
               timeStep = timeStep,
               otpLength = otpLength,
-              allowedFutureTimeSteps = allowedFutureSteps
-            )
+              allowedFutureTimeSteps = allowedFutureSteps,
+            ),
           ) {
             val driftedClock = Clock.fixed(Instant.ofEpochSecond(clientTime), ZoneOffset.UTC)
             val userInputTotp = localTOTPGeneration(secret, driftedClock, otpLength, timeStep)
-            val verificationResult = defaultTOTPService.verify(
-              userInputTotp,
-              secret
-            )
+            val verificationResult =
+              defaultTOTPService.verify(
+                userInputTotp,
+                secret,
+              )
 
             verificationResult.isSuccess() shouldBe true
             verificationResult.isFailure() shouldBe false
@@ -211,7 +217,7 @@ class DefaultTOTPServiceTest : FunSpec({
         arbInstant,
         arbOtpLength,
         arbTotpSecret,
-        Arb.int(30..90) // time step
+        arbTimeStep,
       ) { time, otpLength, secret, timeStep ->
 
         val serverTimeStep = obtainCurrentTimeStep(Clock.fixed(time, ZoneOffset.UTC), timeStep)
@@ -223,15 +229,16 @@ class DefaultTOTPServiceTest : FunSpec({
             TestState(
               clock = Clock.fixed(Instant.ofEpochSecond(serverTimeInSeconds), ZoneOffset.UTC),
               timeStep = timeStep,
-              otpLength = otpLength
-            )
+              otpLength = otpLength,
+            ),
           ) {
             val driftedClock = Clock.fixed(Instant.ofEpochSecond(clientTime), ZoneOffset.UTC)
             val userInputTotp = localTOTPGeneration(secret, driftedClock, otpLength, timeStep)
-            val verificationResult = defaultTOTPService.verify(
-              userInputTotp,
-              secret
-            )
+            val verificationResult =
+              defaultTOTPService.verify(
+                userInputTotp,
+                secret,
+              )
 
             verificationResult.isSuccess() shouldBe true
             verificationResult.isFailure() shouldBe false
@@ -246,13 +253,14 @@ class DefaultTOTPServiceTest : FunSpec({
 
     test("should reject invalid TOTP") {
       checkAll(
-        arbTotpSecret
+        arbTotpSecret,
       ) { secret ->
         given(TestStateMockedTOTP()) {
-          val verificationResult = defaultTOTPService.verify(
-            TOTP("123456"),
-            secret
-          )
+          val verificationResult =
+            defaultTOTPService.verify(
+              TOTP("123456"),
+              secret,
+            )
 
           verificationResult.isFailure() shouldBe true
           verificationResult.isSuccess() shouldBe false
@@ -263,7 +271,10 @@ class DefaultTOTPServiceTest : FunSpec({
   }
 })
 
-private fun given(state: TestState = TestState(), test: TestState.(DefaultTOTPService) -> Unit) {
+private fun given(
+  state: TestState = TestState(),
+  test: TestState.(DefaultTOTPService) -> Unit,
+) {
   with(state) {
     test(state.defaultTOTPService)
   }
@@ -275,51 +286,56 @@ open class TestState(
   val otpLength: OTPLength = OTPLength.SIX,
   val digest: HMACDigest = HMACDigest.SHA1,
   val allowedPastTimeSteps: Int = 0,
-  val allowedFutureTimeSteps: Int = 0
+  val allowedFutureTimeSteps: Int = 0,
 ) {
-
-  private val totpGenerator = TOTPGenerator(
-    startTime = 0,
-    timeStepSeconds = timeStep,
-    otpLength = otpLength,
-    digest = digest,
-    clock = clock
-  )
-
-  open val defaultTOTPService = DefaultTOTPService(
-    totpGenerator,
-    TOTPConfiguration(
-      allowedPastSteps = allowedPastTimeSteps,
-      allowedFutureSteps = allowedFutureTimeSteps
+  private val totpGenerator =
+    TOTPGenerator(
+      startTime = 0,
+      timeStepSeconds = timeStep,
+      otpLength = otpLength,
+      digest = digest,
+      clock = clock,
     )
-  )
+
+  open val defaultTOTPService =
+    DefaultTOTPService(
+      totpGenerator,
+      TOTPConfiguration(
+        allowedPastSteps = allowedPastTimeSteps,
+        allowedFutureSteps = allowedFutureTimeSteps,
+      ),
+    )
 }
 
 class TestStateMockedTOTP(
-  private val totpGeneratorResponse: List<TOTP> = listOf(TOTP("654321"))
+  private val totpGeneratorResponse: List<TOTP> = listOf(TOTP("654321")),
 ) : TestState(
-  timeStep = 30,
-  clock = Clock.systemUTC(),
-  otpLength = OTPLength.SIX,
-  digest = HMACDigest.SHA1,
-  allowedPastTimeSteps = 0,
-  allowedFutureTimeSteps = 0
-) {
+    timeStep = 30,
+    clock = Clock.systemUTC(),
+    otpLength = OTPLength.SIX,
+    digest = HMACDigest.SHA1,
+    allowedPastTimeSteps = 0,
+    allowedFutureTimeSteps = 0,
+  ) {
+  private val totpGenerator =
+    mockk<TOTPGenerator>(relaxed = true) {
+      coEvery { generate(any(), any(), any()) } coAnswers { totpGeneratorResponse }
+    }
 
-  private val totpGenerator = mockk<TOTPGenerator>(relaxed = true) {
-    coEvery { generate(any(), any(), any()) } coAnswers { totpGeneratorResponse }
-  }
-
-  override val defaultTOTPService = DefaultTOTPService(
-    totpGenerator,
-    TOTPConfiguration(
-      allowedPastSteps = allowedPastTimeSteps,
-      allowedFutureSteps = allowedFutureTimeSteps
+  override val defaultTOTPService =
+    DefaultTOTPService(
+      totpGenerator,
+      TOTPConfiguration(
+        allowedPastSteps = allowedPastTimeSteps,
+        allowedFutureSteps = allowedFutureTimeSteps,
+      ),
     )
-  )
 }
 
-private fun obtainCurrentTimeStep(clock: Clock, timeStep: Int): Long {
+private fun obtainCurrentTimeStep(
+  clock: Clock,
+  timeStep: Int,
+): Long {
   val startTime = 0
   return ((clock.millis() / 1000) - startTime) / timeStep
 }
@@ -328,7 +344,7 @@ private fun localTOTPGeneration(
   totpSecret: TOTPSecret,
   clock: Clock,
   otpLength: OTPLength = OTPLength.SIX,
-  timeStep: Int = 30
+  timeStep: Int = 30,
 ): TOTP {
   val generator = HOTPGenerator(otpLength, HMACDigest.SHA1)
   val t: Long = obtainCurrentTimeStep(clock, timeStep)

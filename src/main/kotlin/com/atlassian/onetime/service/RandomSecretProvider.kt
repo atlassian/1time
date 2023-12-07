@@ -5,7 +5,6 @@ import java.security.SecureRandom
 import java.util.concurrent.CompletableFuture
 
 class RandomSecretProvider : SecretProvider {
-
   companion object {
     fun generateSecret() =
       SecureRandom().let {
@@ -19,7 +18,6 @@ class RandomSecretProvider : SecretProvider {
 }
 
 class AsyncRandomSecretProvider : AsyncSecretProvider {
-
   override fun generateSecret(): CompletableFuture<TOTPSecret> =
     CompletableFuture.supplyAsync {
       RandomSecretProvider.generateSecret()
@@ -27,6 +25,5 @@ class AsyncRandomSecretProvider : AsyncSecretProvider {
 }
 
 class CPSRandomSecretProvider : CPSSecretProvider {
-
   override suspend fun generateSecret(): TOTPSecret = RandomSecretProvider.generateSecret()
 }
