@@ -32,7 +32,7 @@ group = "com.atlassian"
 version = "2.0.2"
 description = "onetime"
 
-val javaVersion = JavaVersion.VERSION_17
+val javaVersion = JavaVersion.VERSION_1_8
 
 tasks.withType<JavaCompile> {
   options.encoding = "UTF-8"
@@ -42,7 +42,7 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = "1.8"
     freeCompilerArgs +=
       listOf(
         "-progressive",
