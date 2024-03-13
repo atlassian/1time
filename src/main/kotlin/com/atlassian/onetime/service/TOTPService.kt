@@ -91,7 +91,7 @@ class DefaultTOTPService(
 }
 
 fun String.urlEncode(): String =
-  URLEncoder.encode(this, Charsets.UTF_8)
+  URLEncoder.encode(this, Charsets.UTF_8.name())
     .replace("+", "%20")
     .replace("*", "%2A")
     .replace("%7E", "~")
