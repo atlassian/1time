@@ -69,6 +69,10 @@ tasks {
 
   test {
     useJUnitPlatform()
+    javaLauncher =
+      project.javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(8)
+      }
   }
 
   publishing {
