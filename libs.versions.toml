@@ -4,7 +4,7 @@ commonsCodec = "1.17.0"
 dokkaPlugin = "1.9.20"
 kotest = "5.8.1"
 kotlin = "1.9.24"
-ktlintPlugin = "12.1.0"
+ktlintPlugin = "12.1.1"
 kotlinxCoroutines = "1.8.0"
 mockk = "1.13.10"
 
