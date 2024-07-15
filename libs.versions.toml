@@ -6,7 +6,7 @@ kotest = "5.9.1"
 kotlin = "2.0.0"
 ktlintPlugin = "12.1.1"
 kotlinxCoroutines = "1.8.1"
-mockk = "1.13.11"
+mockk = "1.13.12"
 
 [bundles]
 kotest = [
