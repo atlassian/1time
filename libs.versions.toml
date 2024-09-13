@@ -5,7 +5,7 @@ dokkaPlugin = "1.9.20"
 kotest = "5.9.1"
 kotlin = "2.0.20"
 ktlintPlugin = "12.1.1"
-kotlinxCoroutines = "1.8.1"
+kotlinxCoroutines = "1.9.0"
 mockk = "1.13.12"
 
 [bundles]
