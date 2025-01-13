@@ -1,12 +1,12 @@
 [versions]
 
-commonsCodec = "1.16.1"
-dokkaPlugin = "1.9.20"
-kotest = "5.8.1"
-kotlin = "1.9.23"
-ktlintPlugin = "12.1.0"
-kotlinxCoroutines = "1.8.0"
-mockk = "1.13.10"
+commonsCodec = "1.17.2"
+dokkaPlugin = "2.0.0"
+kotest = "5.9.1"
+kotlin = "2.1.0"
+ktlintPlugin = "12.1.1"
+kotlinxCoroutines = "1.10.1"
+mockk = "1.13.16"
 
 [bundles]
 kotest = [
