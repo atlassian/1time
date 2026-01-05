@@ -51,7 +51,7 @@ tasks.withType<KotlinCompile> {
         "-java-parameters",
         "-opt-in=kotlin.time.ExperimentalTime",
         "-opt-in=kotlin.RequiresOptIn",
-      )
+      ),
     )
 
     // https://youtrack.jetbrains.com/issue/KTIJ-1224

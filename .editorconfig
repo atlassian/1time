@@ -25,20 +25,19 @@ ij_visual_guides = 140, 160
 [*.md]
 trim_trailing_whitespace = false
 
-
-[*.{kt,java}]
+[*.{kt,kts,java}]
 ij_kotlin_imports_layout = *
 indent_size = 2
 ij_kotlin_name_count_to_use_star_import = 999
 ij_kotlin_name_count_to_use_star_import_for_members = 999
+ij_kotlin_packages_to_use_import_on_demand = unset
 ij_java_class_count_to_use_import_on_demand = 999
-
-[*.kts]
-ij_kotlin_imports_layout = *
-indent_size = 2
-ij_kotlin_name_count_to_use_star_import = 999
-ij_kotlin_name_count_to_use_star_import_for_members = 999
-ij_java_class_count_to_use_import_on_demand = 999
+ktlint_code_style = intellij_idea
+ktlint_standard_class-naming = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_value-parameter-comment = disabled
 
 [*.{tf, yml, yaml}]
 indent_size = 2
