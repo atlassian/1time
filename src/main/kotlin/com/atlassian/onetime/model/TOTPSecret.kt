@@ -14,9 +14,7 @@ data class TOTPSecret(val value: ByteArray) {
     return value.contentEquals(other.value)
   }
 
-  override fun hashCode(): Int {
-    return value.contentHashCode()
-  }
+  override fun hashCode(): Int = value.contentHashCode()
 
   companion object {
     fun fromBase32EncodedString(value: String): TOTPSecret = TOTPSecret(Base32().decode(value))
