@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -41,22 +43,23 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions {
-    jvmTarget = "1.8"
-    freeCompilerArgs +=
+  compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_1_8)
+    freeCompilerArgs.addAll(
       listOf(
         "-progressive",
         "-java-parameters",
         "-opt-in=kotlin.time.ExperimentalTime",
         "-opt-in=kotlin.RequiresOptIn",
       )
+    )
 
     // https://youtrack.jetbrains.com/issue/KTIJ-1224
     // This is really an IDE bug.
     // Without explicit languageVersion the Gradle build does compile 1.5 structures (sealed interfaces). So, for Gradle the value is 1.5.
     // The wrong value is only in IDE settings.
-    languageVersion = "1.8"
-    apiVersion = "1.8"
+    languageVersion.set(KotlinVersion.KOTLIN_1_8)
+    apiVersion.set(KotlinVersion.KOTLIN_1_8)
   }
 }
 
