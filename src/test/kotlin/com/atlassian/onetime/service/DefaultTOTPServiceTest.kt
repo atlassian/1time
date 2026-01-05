@@ -310,13 +310,13 @@ open class TestState(
 class TestStateMockedTOTP(
   private val totpGeneratorResponse: List<TOTP> = listOf(TOTP("654321")),
 ) : TestState(
-    timeStep = 30,
-    clock = Clock.systemUTC(),
-    otpLength = OTPLength.SIX,
-    digest = HMACDigest.SHA1,
-    allowedPastTimeSteps = 0,
-    allowedFutureTimeSteps = 0,
-  ) {
+  timeStep = 30,
+  clock = Clock.systemUTC(),
+  otpLength = OTPLength.SIX,
+  digest = HMACDigest.SHA1,
+  allowedPastTimeSteps = 0,
+  allowedFutureTimeSteps = 0,
+) {
   private val totpGenerator =
     mockk<TOTPGenerator>(relaxed = true) {
       coEvery { generate(any(), any(), any()) } coAnswers { totpGeneratorResponse }
