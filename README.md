@@ -16,18 +16,18 @@ Check the latest package at Maven central on: https://mvnrepository.com/artifact
 <dependency>
     <groupId>com.atlassian</groupId>
     <artifactId>onetime</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
 ### Gradle:
 ```kotlin
-implementation("com.atlassian:onetime:2.1.1")
+implementation("com.atlassian:onetime:2.2.0")
 ```
 
 ### SBT: 
 ```scala
-libraryDependencies += "com.atlassian" % "onetime" % "2.1.1"
+libraryDependencies += "com.atlassian" % "onetime" % "2.2.0"
 ```
 
 ## Quick start
