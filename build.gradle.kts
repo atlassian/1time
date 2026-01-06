@@ -58,8 +58,8 @@ tasks.withType<KotlinCompile> {
     // This is really an IDE bug.
     // Without explicit languageVersion the Gradle build does compile 1.5 structures (sealed interfaces). So, for Gradle the value is 1.5.
     // The wrong value is only in IDE settings.
-    languageVersion.set(KotlinVersion.KOTLIN_1_8)
-    apiVersion.set(KotlinVersion.KOTLIN_1_8)
+    languageVersion.set(KotlinVersion.KOTLIN_2_2)
+    apiVersion.set(KotlinVersion.KOTLIN_2_2)
   }
 }
 
