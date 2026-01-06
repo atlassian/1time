@@ -10,8 +10,7 @@ mockk = "1.14.7"
 
 [bundles]
 kotest = [
-  "kotest-property",
-  "kotest-frameworkDatatest"
+  "kotest-property"
 ]
 
 [libraries]
@@ -22,7 +21,6 @@ kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-co
 # Kotest
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
-kotest-frameworkDatatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
 
 # mockk
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }

@@ -25,7 +25,6 @@ dependencies {
   implementation(libs.kotlinx.coroutinesCore)
 
   testImplementation(libs.mockk)
-  testImplementation(libs.kotest.frameworkDatatest)
   testImplementation(libs.kotest.runnerJUnit5)
   testImplementation(libs.kotest.property)
 }
