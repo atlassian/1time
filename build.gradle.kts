@@ -67,7 +67,7 @@ tasks {
 
   // This task is added by Gradle when we use java.withJavadocJar()
   named<Jar>("javadocJar") {
-    from(dokkaJavadoc)
+    from(dokkaGenerate)
   }
 
   test {
