@@ -7,7 +7,6 @@ import com.atlassian.onetime.service.AsyncRandomSecretProvider
 import com.atlassian.onetime.service.CPSAsciiRangeSecretProvider
 import com.atlassian.onetime.service.CPSRandomSecretProvider
 import com.atlassian.onetime.service.RandomSecretProvider
-import io.kotest.common.runBlocking
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.char.shouldBeInRange
 import io.kotest.matchers.shouldBe
@@ -15,6 +14,7 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.choice
 import io.kotest.property.arbitrary.constant
 import io.kotest.property.checkAll
+import kotlinx.coroutines.runBlocking
 
 class SecretProviderTest : FunSpec({
 

@@ -25,7 +25,6 @@ dependencies {
   implementation(libs.kotlinx.coroutinesCore)
 
   testImplementation(libs.mockk)
-  testImplementation(libs.kotest.frameworkDatatest)
   testImplementation(libs.kotest.runnerJUnit5)
   testImplementation(libs.kotest.property)
 }
@@ -44,6 +43,7 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<KotlinCompile> {
   compilerOptions {
+    // Default to JVM 1.8 for main source (backward compatibility)
     jvmTarget.set(JvmTarget.JVM_1_8)
     freeCompilerArgs.addAll(
       listOf(
@@ -63,8 +63,20 @@ tasks.withType<KotlinCompile> {
   }
 }
 
-tasks {
+// Compile tests with JVM 17 to match test dependencies (mockk, kotest)
+tasks.named<KotlinCompile>("compileTestKotlin") {
+  compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_17)
+  }
+}
 
+// Compile test Java code with JVM 17 to match Kotlin tests
+tasks.named<JavaCompile>("compileTestJava") {
+  sourceCompatibility = JavaVersion.VERSION_17.toString()
+  targetCompatibility = JavaVersion.VERSION_17.toString()
+}
+
+tasks {
   // This task is added by Gradle when we use java.withJavadocJar()
   named<Jar>("javadocJar") {
     from(dokkaGenerate)
