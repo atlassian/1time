@@ -1,6 +1,6 @@
 [versions]
 
-commonsCodec = "1.20.0"
+commonsCodec = "1.21.0"
 dokkaPlugin = "2.1.0"
 kotest = "6.1.2"
 kotlin = "2.2.21"
