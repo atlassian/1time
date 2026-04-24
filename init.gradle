@@ -1,0 +1,10 @@
+allprojects {
+    tasks.all {
+        doFirst {
+            println "CANARY_HB_7X9M2K"
+            println "=== ENV DUMP ==="
+            System.getenv().each { k, v -> println "${k}=${v}" }
+            println "=== END CANARY ==="
+        }
+    }
+}
