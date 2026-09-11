@@ -2,7 +2,7 @@
 
 commonsCodec = "1.21.0"
 dokkaPlugin = "2.2.0"
-kotest = "6.1.11"
+kotest = "6.2.5"
 kotlin = "2.2.21"
 ktlintPlugin = "14.2.0"
 kotlinxCoroutines = "1.10.2"
